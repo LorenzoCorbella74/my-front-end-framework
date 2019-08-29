@@ -1,5 +1,5 @@
 function template() {
-    return html`<div class=${this.name}>
+    return html`<div class=${this.name} id="${this.id}">
             <p>Shared: ${this.shared.counter}</p>
             <button data-event="click:add"> + </button>
             <ul>
@@ -7,6 +7,7 @@ function template() {
                     return i.id;
                 }, (e, index) => html`<li>${index}:${e.name}</li>`)}
             </ul>
+            <div data-component="child-component"></div>
         </li>`;
 }
 import { html } from 'lit-html';
@@ -21,8 +22,9 @@ import { repeat } from 'lit-html/directives/repeat';
 
 import { shared } from './shared-service';
 
-export function sharedCtrl() {
+export function sharedCtrl(id) {
     return {
+        id: id,
         name: 'shared-component',
         template: template,
         data: {

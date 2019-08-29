@@ -1,5 +1,5 @@
 function template () {
-    return html`<div class=${this.name}>
+    return html`<div class=${this.name} id="${this.id}">
                 <h3>Dad component</h3>  
                 <p>Counter: ${this.counter}</p>
                 <p>Shared: ${this.shared.counter}</p>
@@ -14,8 +14,9 @@ function template () {
 import {shared} from './shared-service';
 import {html} from 'lit-html';
 
-export function dadCtrl () {
+export function dadCtrl (id) {
     return {
+        id: id,
         name: 'dad-component',
         template: template,
         data: {
