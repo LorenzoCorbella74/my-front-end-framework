@@ -1,10 +1,16 @@
-function template () {
-    return `<div class=${this.name}>
+function template() {
+    return html`<div class=${this.name}>
             <p>Shared: ${this.shared.counter}</p>
             <button data-event="click:add"> + </button>
-            <button data-event="click:remove"> - </button>
-        </div>`;
+            <ul>
+                ${repeat(this.items, i => {
+                    return i.id;
+                }, (e, index) => html`<li>${index}:${e.name}</li>`)}
+            </ul>
+        </li>`;
 }
+import { html } from 'lit-html';
+import { repeat } from 'lit-html/directives/repeat';
 
 /* 
     NOTES: 
@@ -13,16 +19,21 @@ function template () {
     <div data-component="shared-component"></div> 
 */
 
-import {shared} from './shared-service';
+import { shared } from './shared-service';
 
-export function sharedCtrl () {
+export function sharedCtrl() {
     return {
         name: 'shared-component',
         template: template,
         data: {
-            shared: shared 
+            shared: shared,
+            items: [
+                { id: 0, name: "Prince" },
+                { id: 1, name: "Elvis" },
+                { id: 2, name: "Pelvis" }
+            ]
         },
-        get model () {
+        get model() {
             return this.data
         },
         events: {

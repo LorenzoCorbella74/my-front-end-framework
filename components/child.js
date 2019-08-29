@@ -1,13 +1,15 @@
 function templateFactory () {
-    return `
+    return html`
     <div class="${this.name}">
+        <h3>Child component</h3>  
         <p>componente figlio: ${this.counter}</p>
         <button data-event="click:alertMe"> alert from child </button>
         <hr>
         <button data-event="click:toggle"> toggle </button>
-        ${this.visible ? `<p>Non visible: ${this.counter}</p>` : ''}
+        ${this.visible ? html`<p>Non visible: ${this.counter}</p>` : ''}
     </div > `;
 }
+import {html} from 'lit-html';
 
 export function childCtrl () {
     return {

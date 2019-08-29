@@ -23,5 +23,12 @@ h1,h2,h3,h4,h5,h6{
 
 .child-component {
     padding: 10px;
-    border: 1px dotted green;
+    border: 2px dotted red;
+    margin-bottom: 12px;
+}
+
+.shared-component {
+    padding: 10px;
+    border: 2px dotted pink;
+    margin-bottom: 12px;
 }

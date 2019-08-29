@@ -1,5 +1,6 @@
 function template () {
-    return `<div class=${this.name}>
+    return html`<div class=${this.name}>
+                <h3>Dad component</h3>  
                 <p>Counter: ${this.counter}</p>
                 <p>Shared: ${this.shared.counter}</p>
                 <button data-event="click:add"> + </button>
@@ -11,6 +12,7 @@ function template () {
 }
 
 import {shared} from './shared-service';
+import {html} from 'lit-html';
 
 export function dadCtrl () {
     return {

@@ -1,16 +1,12 @@
-# TODO:
+# My Frontend framework
 
 
-[ ] Verificare DomParser
+## TODO:
 
-/*
-    const parser = new DOMParser();
-    const wrapper = parser.parseFromString(this.componentInstance.template, "text/html");
-    const t = wrapper.getElementsByClassName(componentInstance.name)[0];
-    this.output.replaceWith(t);
-*/
-
+[x] Rendering tramite la libreria lit-html
 [ ] Istanze diverse di componenti uguali
+[ ] data del componente come proxy di VUE.js
+[ ] Computed properties (come VUE.js)
 [ ] hook del componente (onInit/onDestroy)
 
 
