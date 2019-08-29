@@ -20,10 +20,11 @@ class Engine {
         this.componentsRegistry[key] = factoryFn;
     }
 
-    createIstance(key, id) {
+    createIstance(key, id, rootId) {
         if (!id) {
             let randomId = Math.random();
             let a = this.componentsRegistry[key](randomId);
+            a.rootId = rootId;
             this.istances.push(a);
             return a;
         } else {
@@ -35,13 +36,16 @@ class Engine {
         return component.template.call(Object.assign({ name: component.name }, component.model));
     }
 
-    checkComponentThree (root) {
+    checkComponentThree(root) {
         const child = root.querySelectorAll('[data-component]');
         child.forEach(element => {
             if (element.dataset.component) {
-                let sonInstance = this.createIstance(element.dataset.component, element.id);
+                let sonInstance = this.createIstance(element.dataset.component, element.id, root.id);
                 render(this.compileTemplate(sonInstance), element);
-                this.mapEvents(element, sonInstance);
+                // events are registered only the first time...
+                if (!element.id) {
+                    this.mapEvents(element, sonInstance);
+                }
                 this.checkComponentThree(element);
             } else {
                 throw 'Componente non presente';
@@ -50,7 +54,7 @@ class Engine {
     }
 
     rootRnder(root, key) {
-        let componentInstance = this.createIstance(key, null);
+        let componentInstance = this.createIstance(key, null, root.id);
         render(this.compileTemplate(componentInstance), root);
         // Root's events
         this.mapEvents(root, componentInstance)
@@ -68,7 +72,7 @@ class Engine {
             this.events[componentInstance.id][i] = { type: str[0], action: str[1], element: root };
             this.addListners(theOne, componentInstance, i, that, root);
         });
-        console.log('Events: ',this.events);
+        console.log('Events: ', this.events);
     }
 
     addListners(theOne, componentInstance, i, that, root) {
