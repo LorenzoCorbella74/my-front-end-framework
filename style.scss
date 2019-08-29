@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+
+body  {
+    color: white;
+    background-color: steelblue;
+    width:80%;
+    margin: 24px auto;
+    font-family: 'Open Sans', sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6{
+    font-family: 'Open Sans Condensed', sans-serif;
+}
+
+
+/* ogni componente metterà i suoi stili gerarchizzati sulla classe principale */
+.dad-component {
+    padding: 5px;
+    border: 1px dotted white;
+}
+
+.child-component {
+    padding: 10px;
+    border: 1px dotted green;
+}

@@ -1,0 +1,20 @@
+{
+  "name": "my-front-end-framework",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "keywords": [
+    "Front end framework",
+    "Vanilla Js"
+  ],
+  "author": "Lorenzo Corbella",
+  "license": "ISC",
+  "devDependencies": {
+    "node-sass": "^4.12.0",
+    "sass": "^1.22.10"
+  }
+}
