@@ -4,11 +4,12 @@ function template () {
             <button data-event="click:add"> + </button>
             <hr>
             <h3>Esempio di lista:</h3>
-            <ul>
-                ${repeat(this.items, i => {
+            ${this.loading ? html`<p> CARICAMENTO!!!!!</p>` : html`<ul>
+            ${repeat(this.items, i => {
         return i.name;
     }, (e, index) => html`<li>${index}:${e.name}</li>`)}
-            </ul>
+        </ul>`}
+            
             <div data-component="child-component"></div>
         </li>`;
 }
@@ -26,7 +27,8 @@ export function sharedCtrl (id) {
         template: template,
         data: {
             shared: shared,
-            items: []
+            items: [],
+            loading: false
         },
         onInit () {
             this.getRandom();
@@ -39,11 +41,16 @@ export function sharedCtrl (id) {
                 this.shared.counter--;
             },
             getRandom: function () {
+                this.loading = true;
                 http.get('https://cors-anywhere.herokuapp.com/https://swapi.co/api/people')
                     .then(response => {
                         this.items = response.results;
+                        this.loading = false;
                     })
-                    .catch(error => console.log('Error: ', error))
+                    .catch(error => {
+                        console.log('Error: ', error);
+                        this.loading = false;
+                    });
             }
         }
     }

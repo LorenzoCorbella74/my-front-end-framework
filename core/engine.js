@@ -36,7 +36,7 @@ export default class Engine {
                         get () { return a._data[key]; },
                         set (val) { 
                             a._data[key] = val; 
-                            // console.log(`${key} updated with value ${val}`); 
+                            console.log(`${key} updated with value ${val}`); 
                             let instance = $e.istances.find(e => e.id === a.id);
                             render($e.compileTemplate(instance), a.element); // solo sul componente che è cambiato
                         }
