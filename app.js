@@ -6,7 +6,10 @@ import { dadCtrl } from './components/dad'
 import { childCtrl } from './components/child'
 import { sharedCtrl } from './components/shared';
 
-import { html, render } from 'lit-html';
+// FILTERS
+import uppercase  from './filters/uppercase';
+
+import { render } from 'lit-html';
 
 class Engine {
 
@@ -14,16 +17,21 @@ class Engine {
         this.events = {};
         this.componentsRegistry = {};
         this.istances = [];
+        this.filters = {};
     }
 
-    addComponent(key, factoryFn) {
+    addComponent (key, factoryFn) {
         this.componentsRegistry[key] = factoryFn;
     }
 
-    createIstance(key, id, rootId) {
+    addFilter (key, filterFn) {
+        this.filters[key] = filterFn;
+    }
+
+    createIstance (key, id, rootId) {
         if (!id) {
-            let randomId = Math.random();
-            let a = this.componentsRegistry[key](randomId);
+            let randomId = Math.floor(Math.random() * 1000000);
+            let a = this.componentsRegistry[key](`${key}:${randomId}`);
             a.rootId = rootId;
             this.istances.push(a);
             return a;
@@ -32,18 +40,21 @@ class Engine {
         }
     }
 
-    compileTemplate(component) {
-        return component.template.call(Object.assign({ name: component.name }, component.model));
+    compileTemplate (component) {
+        let compiledTemplate =  component.template.call(Object.assign({}, { name: component.name, id: component.id, ...component.model}, this.filters));
+        return compiledTemplate
     }
 
-    checkComponentThree(root) {
+    checkComponentThree (root) {
         const child = root.querySelectorAll('[data-component]');
         child.forEach(element => {
             if (element.dataset.component) {
+                let first = element.id;
+                // if there is the id returns the previously created istance
                 let sonInstance = this.createIstance(element.dataset.component, element.id, root.id);
                 render(this.compileTemplate(sonInstance), element);
                 // events are registered only the first time...
-                if (!element.id) {
+                if (!first) {
                     this.mapEvents(element, sonInstance);
                 }
                 this.checkComponentThree(element);
@@ -53,7 +64,7 @@ class Engine {
         });
     }
 
-    rootRnder(root, key) {
+    rootRnder (root, key) {
         let componentInstance = this.createIstance(key, null, root.id);
         render(this.compileTemplate(componentInstance), root);
         // Root's events
@@ -63,7 +74,7 @@ class Engine {
         console.log('Components istances: ', this.istances);
     }
 
-    mapEvents(root, componentInstance) {
+    mapEvents (root, componentInstance) {
         this.events[componentInstance.id] = [];
         const theOnes = root.querySelectorAll('[data-event]'); // solo sul componente
         let that = this;
@@ -75,7 +86,7 @@ class Engine {
         console.log('Events: ', this.events);
     }
 
-    addListners(theOne, componentInstance, i, that, root) {
+    addListners (theOne, componentInstance, i, that, root) {
         theOne.addEventListener(this.events[componentInstance.id][i].type, function (e) {
             componentInstance.events[that.events[componentInstance.id][i].action].call(componentInstance.model, e);
             let instance = that.istances.find(e => e.id === componentInstance.id);;
@@ -88,11 +99,14 @@ window.onload = function () {
 
     const app = new Engine();
 
-    // si registrano i componenti
+    // registering components
     app.addComponent('dad-component', dadCtrl);
     app.addComponent('child-component', childCtrl);
     app.addComponent('shared-component', sharedCtrl);
 
-    // si 
-    app.rootRnder(document.getElementById('output'), 'dad-component'); // rendering the root
+    // registering filters
+    app.addFilter('uppercase', uppercase);
+
+    // rendering the root
+    app.rootRnder(document.getElementById('output'), 'dad-component');
 }

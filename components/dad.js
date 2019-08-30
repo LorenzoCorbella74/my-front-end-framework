@@ -1,5 +1,5 @@
 function template () {
-    return html`<div class=${this.name} id="${this.id}">
+    return html`<div class=${this.uppercase(this.name)} id="${this.id}">
                 <h3>Dad component</h3>  
                 <p>Counter: ${this.counter}</p>
                 <p>Shared: ${this.shared.counter}</p>
