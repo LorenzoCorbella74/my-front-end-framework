@@ -1,25 +1,27 @@
-# My Frontend framework
+# My Personal Frontend framework
 
-Queste circa ***150 righe*** di Javascript sono il risultato dei miei sforzi nella creazione di un framework FE con una API semplice e diretta avente tutte le principali caratteristiche dei framework più famosi (component based, routing, http service, etc). Per il Templating e Rendering engine è stata utilizzata la libreria [lit-html](https://github.com/polymer/lit-html) che garantisce una ottima performance.
+Queste circa ***200 righe*** di Javascript ES6 sono il risultato dei miei sforzi nella creazione di un framework FE avente ___tutte le principali caratteristiche dei framework più famosi___ (component based, nestable components, routing, http requests, etc), realizzato unicamente per finalità didattiche. Per il Templating e Rendering engine è stata utilizzata la libreria [lit-html](https://github.com/polymer/lit-html) che garantisce una performance superiore al Virtual DOM.
 
 ## FEATURES
 - [x] Componenti tra loro innestati tramite l'attributo ```data-component```
 - [x] API Componenti simile a quella di [Vue.js](https://vuejs.org) con ```data``` del componente proxato e Computed properties
 - [x] Istanze diverse dello stesso componente
-- [x] Gestione degli eventi della singola istanza del componente (per pura esigenza didattica non sono state utilizzate gli eventi di [lit-html](https://github.com/polymer/lit-html)) con Ricostruzione eventi solo se non presenti 
+- [x] Gestione automatizzata degli eventi della singola istanza del componente (per esigenze didattiche non sono state utilizzate gli eventi di [lit-html](https://github.com/polymer/lit-html))
+- [x] hook del componente: onInit
+- [x] wrapper di [fetch API](https://github.com/github/fetch) per le chiamate HTTP
 
 ### TODO:
 - [ ] Router
-- [ ] HTTP
-- [ ] Filters: implementato ma non funzionante....)
+- [ ] Filters: implementato ma non funzionante :-(
 - [ ] reattività del modello condiviso tra componenti diversi
 - [ ] Props passate dal componente padre al figlio
 - [ ] Events
-- [ ] hook del componente (onInit, onPropsChange, onDestroy)
+- [ ] hook del componente: onPropsChange, onDestroy
+- [ ] rimozione eventi se il componente è distrutto
 
 # Documentation
 
-Per utilizzarla basta importare la libreria e registrare i componenti, ed i filtri:
+Per utilizzare il framework basta importare la libreria e registrare i componenti, ed i filtri:
 ```javascript
 
 window.onload = function () {
@@ -27,7 +29,7 @@ window.onload = function () {
     const app = new Engine();
 
     // registering components
-    app.addComponent('dad-component', dadCtrl);
+    app.addComponent('dad-component', dadCtrl); //  
     app.addComponent('child-component', childCtrl);
     app.addComponent('shared-component', sharedCtrl);
 
@@ -39,7 +41,7 @@ window.onload = function () {
 }
 ```
 
-I componenti contengono in un unico file la funzione responsabile della generazione del template e l'oggetto contenente il nome, dati del modello, funzioni associate ad aventi e computed properties. Per registrare gli eventi si è itilizzato l'attributo ```data-event="click:add"``` valorizzato con <tipo evento>:<funzione associata>
+I componenti contengono in un unico file la funzione responsabile della generazione del template e l'oggetto rappresentativo del componente, contenente il nome, dati del modello, funzioni associate ad aventi e computed properties. Per registrare gli eventi si è itilizzato l'attributo ```data-event="click:add"``` valorizzato con ```<tipo evento>:<funzione associata>```
 
 ```javascript
 
@@ -52,7 +54,6 @@ function template () {
                 <p>Esempio di computed properties: ${this.interpolated}</p>
                 <hr> 
                 <div data-component="child-component"></div>
-                <div data-component="shared-component"></div>
             </div>`;
 }
 

@@ -18,13 +18,15 @@ export default class Engine {
         this.filters[key] = filterFn;
     }
 
-    createIstance (key, id, rootId) {
+    createIstance (key, id, root, element) {
+        let $e = this
         if (!id) {
             let randomId = Math.floor(Math.random() * 1000000);
             let a = this.componentsRegistry[key](`${key}:${randomId}`);
-            a.rootId = rootId;
+            a.rootId = root.id;
             a._data = a.data;   // tempo obj
             a.model = {};
+            a.element = element;
             Object
                 .keys(a.data)
                 .forEach(key => {
@@ -32,15 +34,25 @@ export default class Engine {
                         configurable: true,
                         enumerable: true,
                         get () { return a._data[key]; },
-                        set (val) { a._data[key] = val; }
+                        set (val) { 
+                            a._data[key] = val; 
+                            // console.log(`${key} updated with value ${val}`); 
+                            let instance = $e.istances.find(e => e.id === a.id);
+                            render($e.compileTemplate(instance), a.element); // solo sul componente che è cambiato
+                        }
                     }
                     Object.defineProperty(a.model, key, props);
                     if (a.computed) this.initComputed(a.model, a.computed);
                 });
             this.istances.push(a);
+            // running the init of the component
+            if (a.onInit && typeof a.onInit === 'function' ) {
+                let x = Object.assign(a.model, a.events);
+                a.onInit.call(x);
+            }
             return a;
         } else {
-            return this.istances.find(e => e.id === id);
+            return this.istances.find(e => e.id === element.id);
         }
     }
 
@@ -76,7 +88,7 @@ export default class Engine {
             if (element.dataset.component) {
                 let first = element.id;
                 // if there is the id returns the previously created istance
-                let sonInstance = this.createIstance(element.dataset.component, element.id, root.id);
+                let sonInstance = this.createIstance(element.dataset.component, element.id, root, element);
                 render(this.compileTemplate(sonInstance), element);
                 // events are registered only the first time...
                 if (!first) {
@@ -90,7 +102,7 @@ export default class Engine {
     }
 
     rootRender (root, key) {
-        let componentInstance = this.createIstance(key, null, root.id);
+        let componentInstance = this.createIstance(key, null, root, root);
         render(this.compileTemplate(componentInstance), root);
         // Root's events
         this.mapEvents(root, componentInstance)
@@ -115,7 +127,7 @@ export default class Engine {
         theOne.addEventListener(this.events[componentInstance.id][i].type, function (e) {
             componentInstance.events[that.events[componentInstance.id][i].action].call(componentInstance.model, e);
             console.log('Updated model: ', componentInstance);
-            let instance = that.istances.find(e => e.id === componentInstance.id);;
+            let instance = that.istances.find(e => e.id === componentInstance.id);
             render(that.compileTemplate(instance), root); // solo sul componente
         });
     }

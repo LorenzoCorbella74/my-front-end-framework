@@ -1,6 +1,8 @@
 // si importa gli stili SASS
 import './style.scss';
 
+import '@babel/polyfill';
+
 // COMPONETS
 import { dadCtrl } from './components/dad'
 import { childCtrl } from './components/child'
@@ -10,7 +12,6 @@ import { sharedCtrl } from './components/shared';
 import uppercase  from './filters/uppercase';
 
 import Engine from './core/engine';
-
 
 window.onload = function () {
 
