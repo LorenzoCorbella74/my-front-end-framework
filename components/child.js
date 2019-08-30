@@ -20,9 +20,6 @@ export function childCtrl(id) {
             counter: 5,
             visible: false
         },
-        get model() {
-            return this.data
-        },
         events: {
             alertMe: function () {
                 alert('event handler on a child component!')

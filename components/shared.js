@@ -35,9 +35,6 @@ export function sharedCtrl(id) {
                 { id: 2, name: "Pelvis" }
             ]
         },
-        get model() {
-            return this.data
-        },
         events: {
             add: function (e) {
                 this.shared.counter++;

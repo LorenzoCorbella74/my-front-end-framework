@@ -5,6 +5,7 @@ function template () {
                 <p>Shared: ${this.shared.counter}</p>
                 <button data-event="click:add"> + </button>
                 <button data-event="click:remove"> - </button>
+                <p>Esempio di computed properties: ${this.interpolated}</p>
                 <hr> 
                 <div data-component="child-component"></div>
                 <div data-component="shared-component"></div>
@@ -23,8 +24,10 @@ export function dadCtrl (id) {
             counter: 0,
             shared: shared
         },
-        get model () {
-            return this.data
+        computed:{
+            interpolated (params) {
+                return ` Clicked ${this.counter} times`;
+            }
         },
         events: {
             add: function (e) {
