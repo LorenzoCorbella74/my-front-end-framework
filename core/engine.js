@@ -1,15 +1,5 @@
 import Watcher from './watcher';
-
 import { render } from 'lit-html';
-
-
-const noop = function () { };
-const sharedPropDef = {
-    enumerable: true,
-    configurable: true,
-    get: noop,
-    set: noop
-};
 
 export default class Engine {
 

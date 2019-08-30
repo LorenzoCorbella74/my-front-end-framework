@@ -13,13 +13,6 @@ function template() {
 import { html } from 'lit-html';
 import { repeat } from 'lit-html/directives/repeat';
 
-/* 
-    NOTES: 
-    al momento non sono supportate più istanze dello stesso componente 
-    <div data-component="child-component"></div>
-    <div data-component="shared-component"></div> 
-*/
-
 import { shared } from './shared-service';
 
 export function sharedCtrl(id) {
