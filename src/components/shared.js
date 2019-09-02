@@ -7,7 +7,7 @@ function template () {
             ${this.loading ? html`<p> CARICAMENTO!!!!!</p>` : html`<ul>
             ${repeat(this.items, i => {
         return i.name;
-    }, (e, index) => html`<li>${index}:${e.name}</li>`)}
+    }, (e, index) => html`<li>${index}: ${e.name}</li>`)}
         </ul>`}
             
             <div data-component="child-component"></div>
@@ -40,9 +40,10 @@ export function sharedCtrl (id) {
             remove: function (e) {
                 this.shared.counter--;
             },
-            getRandom: function () {
+            getRandom () {
                 this.loading = true;
-                http.get('https://cors-anywhere.herokuapp.com/https://swapi.co/api/people')
+                let toAvoidCors = 'https://cors-anywhere.herokuapp.com';
+                http.get(toAvoidCors + '/https://swapi.co/api/people')
                     .then(response => {
                         this.items = response.results;
                         this.loading = false;

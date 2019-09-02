@@ -1,6 +1,6 @@
 # My Personal Frontend framework
 
-Queste circa ***200 righe*** di Javascript ES6 sono il risultato dei miei sforzi nella creazione di un framework FE avente ___tutte le principali caratteristiche dei framework più famosi___ (component based, nestable components, routing, http requests, etc), realizzato unicamente per finalità didattiche. Per il Templating e Rendering engine è stata utilizzata la libreria [lit-html](https://github.com/polymer/lit-html) che garantisce una performance superiore al Virtual DOM.
+Queste circa ***200 righe*** di Javascript ES6 sono il risultato dei miei sforzi nella creazione di un framework FE avente ___tutte le principali caratteristiche dei framework attuali ___ (component based, nestable components, two way binding, routing, http requests, etc), realizzato unicamente per finalità didattiche. Per il Templating e Rendering engine è stata utilizzata la libreria [lit-html](https://github.com/polymer/lit-html) che garantisce una performance superiore alle soluzioni che utilizzano il Virtual DOM, mentre per il watch sui cambiamenti del modello si è utilizzato [on-change](https://github.com/sindresorhus/on-change).
 
 ## FEATURES
 - [x] Componenti tra loro innestati 
@@ -8,16 +8,17 @@ Queste circa ***200 righe*** di Javascript ES6 sono il risultato dei miei sforzi
 - [x] Istanze diverse dello stesso componente
 - [x] Gestione automatizzata degli eventi della singola istanza del componente
 - [x] hook del componente: onInit
+- [x] two way data binding  
 - [x] wrapper di [fetch API](https://github.com/github/fetch) per le chiamate HTTP
+- [x] Filters (implementato ma non funzionante :-( )
 
 ### TODO:
 - [ ] Router
-- [ ] "queue dei cambiamenti" per avere un unico cambiamento in caso di modifica contemporanea di più proprietà 
-- [ ] Filters: implementato ma non funzionante :-(
-- [ ] reattività del modello condiviso tra componenti diversi
 - [ ] Props passate dal componente padre al figlio
 - [ ] Events
 - [ ] hook del componente: onPropsChange, onDestroy
+- [ ] "queue dei cambiamenti" per avere un unico cambiamento in caso di modifica contemporanea di più proprietà 
+- [ ] reattività del modello condiviso tra componenti diversi
 - [ ] rimozione eventi se il componente è distrutto
 
 # Documentation
@@ -87,7 +88,7 @@ export function dadCtrl (id) {
 
 ## Built With
 
-HTML5, CSS, Javascript, [lit-html](https://github.com/polymer/lit-html)
+HTML5, CSS, Javascript, [lit-html](https://github.com/polymer/lit-html) [on-change](https://github.com/sindresorhus/on-change), 
 
 ## Versioning
 

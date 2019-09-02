@@ -1,24 +1,33 @@
 {
   "name": "my-front-end-framework",
   "version": "0.1.0",
-  "description": "My OWN Front End framework",
-  "main": "index.js",
-  "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html"
-  },
+  "description": "My own Front End framework",
+  "main": "app.js",
   "keywords": [
-    "Front end framework",
-    "Vanilla Js"
+    "framework",
+    "front end",
+    "lit-html",
+    "on-change",
+    "component-based",
+    "Vanilla JS"
   ],
   "author": "Lorenzo Corbella",
   "license": "ISC",
-  "devDependencies": {
-    "node-sass": "^4.12.0",
-    "sass": "^1.22.10"
+  "scripts": {
+    "clean": "rm dist/bundle.js",
+    "start": "parcel src/index.html",
+    "build-prod": "parcel build src/index.html"
   },
   "dependencies": {
-    "eslint": "^6.2.2",
-    "lit-html": "^1.1.2"
+    "lit-html": "^1.1.2",
+    "lodash.set": "^4.3.2",
+    "on-change": "^1.6.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "eslint": "^6.3.0",
+    "parcel-bundler": "^1.12.3",
+    "sass": "^1.22.10"
   }
 }
