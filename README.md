@@ -4,21 +4,21 @@ Queste circa ***200 righe*** di Javascript ES6 sono il risultato dei miei sforzi
 
 ## FEATURES
 - [x] Componenti tra loro innestati 
-- [x] API Componenti simile a quella di [Vue.js](https://vuejs.org) con ```data``` del componente proxato e Computed properties
+- [x] API componenti simile a quella di [Vue.js](https://vuejs.org) con ```data``` del componente proxato e Computed properties
 - [x] Istanze diverse dello stesso componente
 - [x] Gestione automatizzata degli eventi della singola istanza del componente
-- [x] hook del componente: onInit
-- [x] two way data binding  
-- [x] wrapper di [fetch API](https://github.com/github/fetch) per le chiamate HTTP
+- [x] hook del componente: onInit, onPropsChange
+- [x] Props passate da un componente ad un suo figlio
+- [x] Two way data binding  
+- [x] wrapper di [fetch API](https://github.com/github/fetch) per chiamate HTTP
 - [x] Filters (implementato ma non funzionante :-( )
 
 ### TODO:
 - [ ] Router
-- [ ] Props passate dal componente padre al figlio
 - [ ] Events
-- [ ] hook del componente: onPropsChange, onDestroy
+- [ ] hook del componente:  onDestroy
 - [ ] "queue dei cambiamenti" per avere un unico cambiamento in caso di modifica contemporanea di più proprietà 
-- [ ] reattività del modello condiviso tra componenti diversi
+- [ ] reattività di un modello condiviso tra componenti diversi
 - [ ] rimozione eventi se il componente è distrutto
 
 # Documentation
@@ -43,7 +43,9 @@ window.onload = function () {
 }
 ```
 
-I componenti contengono in un unico file la funzione responsabile della generazione del template ( in cui è possibile avere componenti tra loro innestati tramite l'attributo ```data-component```)e l'oggetto rappresentativo del componente, contenente il nome, dati del modello, funzioni associate ad aventi e computed properties. Per esigenze didattiche non sono stati utilizzati gli eventi di [lit-html](https://github.com/polymer/lit-html)) ma gli eventi sono automaticamente generati dal template tramite l'attributo ```data-event="click:add"``` valorizzato con ```<tipo evento>:<funzione associata>```
+I componenti contengono in un unico file la funzione responsabile della generazione del template ( in cui è possibile avere componenti tra loro innestati tramite l'attributo ```data-component```)e l'oggetto rappresentativo del componente, contenente il nome, dati del modello, funzioni associate ad aventi e computed properties. Per esigenze didattiche non sono stati utilizzati gli eventi di [lit-html](https://github.com/polymer/lit-html)) ma gli eventi sono automaticamente generati dal template tramite l'attributo ```data-event="click:add"``` valorizzato con ```<tipo evento>:<funzione associata>```.
+
+Le proprietà passate da un componente ad un suo figlio sono indicate trmite l'attributo ```data-props="form:name"``` valorizzato con ```<nome proprietà>:<nome proprietà>...```. 
 
 ```javascript
 
@@ -55,7 +57,7 @@ function template () {
                 <button data-event="click:remove"> - </button>
                 <p>Esempio di computed properties: ${this.interpolated}</p>
                 <hr> 
-                <div data-component="child-component"></div>
+                <div data-component="child-component" data-props="form:name"></div>
             </div>`;
 }
 

@@ -3,6 +3,9 @@ function templateFactory() {
     <div class="${this.name}" id="${this.id}">
         <h3>Child component</h3>  
         <p>componente figlio: ${this.counter}</p>
+        <hr>
+        <p>passate da parent diretto via props: ${this.form.name} - ${this.form.surname}</p>
+        <hr>
         <button data-event="click:alertMe"> alert from child </button>
         <hr>
         <button data-event="click:toggle"> toggle </button>

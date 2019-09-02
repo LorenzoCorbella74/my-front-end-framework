@@ -4,14 +4,14 @@ function template () {
             <button data-event="click:add"> + </button>
             <hr>
             <h3>Esempio di lista:</h3>
-            ${this.loading ? html`<p> CARICAMENTO!!!!!</p>` : html`<ul>
+            ${this.loading ? html`<div class="loader"></div>` : html`<ul>
             ${repeat(this.items, i => {
         return i.name;
     }, (e, index) => html`<li>${index}: ${e.name}</li>`)}
         </ul>`}
             
-            <div data-component="child-component"></div>
-        </li>`;
+            <div data-component="child-component" data-props="form"></div>
+        `;
 }
 
 import { html } from 'lit-html';
@@ -32,6 +32,9 @@ export function sharedCtrl (id) {
         },
         onInit () {
             this.getRandom();
+        },
+        onPropsChange () {
+            console.log(this);
         },
         events: {
             add: function (e) {

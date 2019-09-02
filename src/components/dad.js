@@ -5,13 +5,16 @@ function template () {
                 <p>Shared: ${this.shared.counter}</p>
                 <button data-event="click:add"> + </button>
                 <button data-event="click:remove"> - </button>
-                <p>Esempio di computed properties: ${this.interpolated}</p>
+                <p><strong>Computed properties:</strong> ${this.interpolated}</p>
                 <hr> 
-                <p>Esempio di two way data binding: ${this.form.name}</p>
+                <p><strong>TWO way data binding:</strong> ${this.form.name}</p>
                 <input type="text" data-model="form.name" value="${this.form.name}">
-                <div data-component="child-component"></div>
-                <div data-component="shared-component"></div>
-            </div>`;
+                <input type="textarea" data-model="form.surname" value="${this.form.surname}">
+                <input type="checkbox" data-model="form.married" name="married"> 
+                <label for="married">Married</label>
+                <div data-component="child-component" data-props="form"></div>
+                <div data-component="shared-component" data-props="form"></div>
+            </div>`; // ${this.form.married ? 'checked':''}
 }
 
 import uppercase from './../filters/uppercase';
@@ -28,7 +31,9 @@ export function dadCtrl (id) {
             counter: 0,
             shared: shared,
             form:{
-                name:''
+                name:'Lore',
+                surname:'Corbe',
+                married: false
             }
         },
         computed:{
