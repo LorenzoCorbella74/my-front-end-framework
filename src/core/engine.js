@@ -1,6 +1,5 @@
 import Watcher from './watcher';
 import { render } from 'lit-html';
-import onchange from 'on-change';
 import set from 'lodash.set';
 
 export default class Engine {
@@ -20,6 +19,33 @@ export default class Engine {
         this.filters[key] = filterFn;
     }
 
+    // when the model change from asyncronous events
+    proxyMe (source, destination, a) {
+        let $e = this;
+        Object
+            .keys(source)
+            .forEach(key => {
+                if (typeof source[key] !== 'object' && source[key] !== null) {
+                    let props = {
+                        configurable: true,
+                        enumerable: true,
+                        get () { return source[key]; },
+                        set (val) {
+                            source[key] = val;
+                            console.log(`${key} updated with value ${val}`);
+                            let instance = $e.istances.find(e => e.id === a.id);
+                            render($e.compileTemplate(instance), a.element); // only for the relevant component
+                        }
+                    }
+                    Object.defineProperty(destination, key, props);
+                    // oggetti
+                } else {
+                    destination[key] = destination[key] || {};
+                    this.proxyMe(source[key], destination[key], a)
+                }
+            });
+    }
+
     createIstance (key, id, root, element) {
         let $e = this
         if (!id) {
@@ -28,53 +54,8 @@ export default class Engine {
             a.rootId = root.id;
             a.element = element;
             a.model = {};
-            // when the model change
-            // a.model =  Object.assign({}, onchange(a.data, function (path, value, previousValue) {
-            //     console.log(`${path} - New:${JSON.stringify(value)} - Old:${JSON.stringify(previousValue)}`);
-            //     let instance = $e.istances.find(e => e.id === a.id);
-            //      render($e.compileTemplate(instance), a.element); // solo sul componente che è cambiato
-            // }) ); 
 
-            // 1) PROXY -> not working
-            // const handler = {
-            //     get: (target, name) => {
-            //         if (typeof target[key] === 'object' && target[key] !== null) {
-            //             return new Proxy(target[key], handler)
-            //         } else {
-            //             return target[key];
-            //         }
-            //     },
-            //     set: (target, name, value) => {
-            //         target[name] = value;
-            //         // console.log(`${name} updated with value ${value}`);
-            //         let instance = $e.istances.find(e => e.id === a.id);
-            //         if (instance) {
-            //             render($e.compileTemplate(instance), a.element); // solo sul componente che è cambiato
-            //         }
-            //         return true
-            //     }
-            // };
-            // let p = new Proxy(a.data, handler);
-            // a.model = p.__target__;
-
-            // 2) getter/setter tramite defineProperty (solo per primitive non per oggetti innestati??)
-            // per modifiche al .data "da eventi asincroni"
-            Object
-                .keys(a.data)
-                .forEach(key => {
-                    let props = {
-                        configurable: true,
-                        enumerable: true,
-                        get () { return a.data[key]; },
-                        set (val) {
-                            a.data[key] = val;
-                            console.log(`${key} updated with value ${val}`);
-                            let instance = $e.istances.find(e => e.id === a.id);
-                            render($e.compileTemplate(instance), a.element); // solo sul componente che è cambiato
-                        }
-                    }
-                    Object.defineProperty(a.model, key, props);
-                });
+            this.proxyMe(a.data, a.model, a);
 
             if (a.computed) this.initComputed(a.model, a.computed);
             this.istances.push(a);
@@ -131,7 +112,7 @@ export default class Engine {
 
     compileTemplate (component) {
         let compiledTemplate = component.template.call(Object.assign(
-            { name: component.name, id: component.id }, component.model, this.filters)
+            { name: component.name, id: component.id, ...component.model }, this.filters)
         );
         return compiledTemplate;
     }
@@ -164,9 +145,6 @@ export default class Engine {
                 let propToBind = element.getAttribute('data-model');
                 element.onkeyup = function () {
                     set(componentInstance.model, propToBind, element.value);
-                    // min caso ci sia da refreshare subito
-                    let instance = that.istances.find(e => e.id === componentInstance.id);
-                    render(that.compileTemplate(instance), root); // solo sul componente
                 }
                 // element.addEventListener('onchange', function (e) {
                 //     set(componentInstance.data, propToBind, e.target.value);

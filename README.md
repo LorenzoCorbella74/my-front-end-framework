@@ -1,6 +1,6 @@
 # My Personal Frontend framework
 
-Queste circa ***200 righe*** di Javascript ES6 sono il risultato dei miei sforzi nella creazione di un framework FE avente ___tutte le principali caratteristiche dei framework attuali ___ (component based, nestable components, two way binding, routing, http requests, etc), realizzato unicamente per finalità didattiche. Per il Templating e Rendering engine è stata utilizzata la libreria [lit-html](https://github.com/polymer/lit-html) che garantisce una performance superiore alle soluzioni che utilizzano il Virtual DOM, mentre per il watch sui cambiamenti del modello si è utilizzato [on-change](https://github.com/sindresorhus/on-change).
+Queste circa ***200 righe*** di Javascript ES6 sono il risultato dei miei sforzi nella creazione di un framework FE avente ___tutte le principali caratteristiche dei framework attuali ___ (component based, nestable components, two way binding, routing, http requests, etc), realizzato unicamente per finalità didattiche. Per il Templating e Rendering engine è stata utilizzata la libreria [lit-html](https://github.com/polymer/lit-html) che garantisce una performance superiore alle soluzioni che utilizzano il Virtual DOM.
 
 ## FEATURES
 - [x] Componenti tra loro innestati 
@@ -88,7 +88,7 @@ export function dadCtrl (id) {
 
 ## Built With
 
-HTML5, CSS, Javascript, [lit-html](https://github.com/polymer/lit-html) [on-change](https://github.com/sindresorhus/on-change), 
+HTML5, CSS, Javascript, [lit-html](https://github.com/polymer/lit-html)
 
 ## Versioning
 

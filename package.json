@@ -12,7 +12,7 @@
     "Vanilla JS"
   ],
   "author": "Lorenzo Corbella",
-  "license": "ISC",
+  "license": "MIT",
   "scripts": {
     "clean": "rm dist/bundle.js",
     "start": "parcel src/index.html",
@@ -20,8 +20,7 @@
   },
   "dependencies": {
     "lit-html": "^1.1.2",
-    "lodash.set": "^4.3.2",
-    "on-change": "^1.6.2"
+    "lodash.set": "^4.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
