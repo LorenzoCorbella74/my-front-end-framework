@@ -3,7 +3,7 @@ import { render } from 'lit-html';
 import set from 'lodash.set';
 import router from './router';
 
-export default class Engine {
+export default class Luce {
 
     constructor(main) {
         this.events = {};
@@ -79,8 +79,8 @@ export default class Engine {
             this.istances.push(a);
             // running the init of the component
             if (a.onInit && typeof a.onInit === 'function') {
-                // passing the model and a reference to events
-                let x = Object.assign(a.model, a.events);
+                // passing the model and a reference to events and router
+                let x = Object.assign(a.model, a.events, {router:$e.router});
                 a.onInit.call(x);
             }
             return a;
@@ -149,8 +149,8 @@ export default class Engine {
     }
 
     rootRender(root, key, urlParams) {
-        // TODO: urlParams
-        console.log('urlParams :', urlParams);
+        // console.log('urlParams :', urlParams);
+        this.router.params = Object.assign({},urlParams);
         let componentInstance = this.createIstance(key, null, root, root, null, {id:null});
         render(this.compileTemplate(componentInstance), root);
         // Root's events
@@ -189,8 +189,9 @@ export default class Engine {
     }
 
     addListners(theOne, componentInstance, i, that, root) {
+        let $e = this;
         theOne.addEventListener(this.events[componentInstance.id][i].type, function (e) {
-            componentInstance.events[that.events[componentInstance.id][i].action].call(componentInstance.model, e);
+            componentInstance.events[that.events[componentInstance.id][i].action].call(Object.assign(componentInstance.model, {router:$e.router}), e);
             console.log('Updated model: ', componentInstance);
         });
     }

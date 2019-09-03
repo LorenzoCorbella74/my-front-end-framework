@@ -1,11 +1,10 @@
-# My Personal Frontend framework
+# Luce.js
 
-Queste circa ***350 righe*** di Javascript ES6 sono il risultato dei miei sforzi nella creazione di un framework FE avente ___tutte le principali caratteristiche dei framework attuali___ (component based, nestable components, two way binding, routing, http requests, etc), realizzato unicamente per finalità didattiche. Per il Templating e Rendering engine è stata utilizzata la libreria [lit-html](https://github.com/polymer/lit-html) che garantisce una performance superiore alle soluzioni che utilizzano il Virtual DOM.
+***Luce.js*** è il risultato dei miei sforzi nella creazione di un framework FE avente tutte le principali caratteristiche dei framework attuali, realizzato unicamente per finalità didattiche. Per avere prestazioni in linea o superiori alle soluzioni basate sul Vistual DOM (React.js, Vue.js) per il Templating e Rendering engine è stata utilizzata la libreria [lit-html](https://github.com/polymer/lit-html).
 
 ## FEATURES
 - [x] Componenti, componenti  innestati e istanze multiple di uno stesso componente
-- [x] API dei componenti simile a quella di [Vue.js](https://vuejs.org) con ```data``` del componente proxato e ```Computed properties```
-- [x] Istanze diverse dello stesso componente
+- [x] API dei componenti simile a quella di [Vue.js](https://vuejs.org) con il modello all'interno della proprietà```data``` e reimplementate le```Computed properties```
 - [x] Gestione automatizzata degli eventi della singola istanza del componente
 - [x] hook del componente: onInit, onPropsChange, onDestroy
 - [x] Props passate da un componente ad un suo figlio
@@ -99,7 +98,7 @@ window.onload = function () {
 
     const mainTag = document.getElementById('output');
 
-    const app = new Engine(mainTag);
+    const app = new Luce(mainTag);
 
     // registering components
     app.addComponent('dad-component', dadCtrl);
@@ -127,6 +126,33 @@ Per usare i link all'interno dei template si deve specificare l'attributo ```dat
 </nav>
 ```
 
+All'interno del componente l'engine inietta il router per poter leggere gli eventuali parametri passati nell'URl o per accedere ai metodi di navigazione.
+```html
+ <nav>
+    <a data-navigation href="/about"> About </a>
+    <a data-navigation href="/about/:${this.id}/${this.counter}"> About "with params"</a>
+</nav>
+```
+```javascipt
+export function aboutCtrl (id) {
+    return {
+        id: id,
+        name: "about-component",
+        template: templateFactory,
+        data: {
+
+        },
+        events: {
+            gotoHome () {
+                this.router.navigate('/');
+            }
+        },
+        onInit () {
+            console.log('Route params', this.router.params);
+        }
+    }
+}
+```
 
 ## Built With
 
