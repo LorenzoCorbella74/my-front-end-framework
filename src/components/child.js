@@ -32,4 +32,4 @@ export function childCtrl(id) {
             }
         }
     }
-};
+}

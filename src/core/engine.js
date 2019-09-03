@@ -1,22 +1,20 @@
 import Watcher from './watcher';
 import { render } from 'lit-html';
 import set from 'lodash.set';
+import router from './router';
 
 export default class Engine {
 
-    constructor() {
+    constructor(main) {
         this.events = {};
         this.componentsRegistry = {};
         this.istances = [];
-        this.filters = {};
+        this.routerOutlet = main;
+        this.router = router(this, this.routerOutlet);
     }
 
     addComponent(key, factoryFn) {
         this.componentsRegistry[key] = factoryFn;
-    }
-
-    addFilter(key, filterFn) {
-        this.filters[key] = filterFn;
     }
 
     propagateChange(a){
@@ -146,11 +144,13 @@ export default class Engine {
             name: component.name,
             id: component.id,
             ...component.model
-        }, this.filters));
+        }));
         return compiledTemplate;
     }
 
-    rootRender(root, key) {
+    rootRender(root, key, urlParams) {
+        // TODO: urlParams
+        console.log('urlParams :', urlParams);
         let componentInstance = this.createIstance(key, null, root, root, null, {id:null});
         render(this.compileTemplate(componentInstance), root);
         // Root's events
@@ -161,6 +161,7 @@ export default class Engine {
     }
 
     mapEvents(root, componentInstance) {
+        let $e = this;
         this.events[componentInstance.id] = [];
         // 1) Events handlers for USER EVENTS via component methods
         const theOnes = root.querySelectorAll('[data-event]'); // solo sul componente
@@ -183,9 +184,6 @@ export default class Engine {
                 element.onkeydown = function () {
                     set(componentInstance.model, propToBind, element.value);
                 }
-                // element.addEventListener('onchange', function (e) {
-                //     set(componentInstance.model, propToBind, e.target.value);
-                // });
             }
         });
     }
@@ -194,8 +192,6 @@ export default class Engine {
         theOne.addEventListener(this.events[componentInstance.id][i].type, function (e) {
             componentInstance.events[that.events[componentInstance.id][i].action].call(componentInstance.model, e);
             console.log('Updated model: ', componentInstance);
-            // let instance = that.istances.find(e => e.id === componentInstance.id);
-            // render(that.compileTemplate(instance), root); // solo sul componente
         });
     }
 }

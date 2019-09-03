@@ -7,24 +7,33 @@ import '@babel/polyfill';
 import { dadCtrl } from './components/dad'
 import { childCtrl } from './components/child'
 import { sharedCtrl } from './components/shared';
-
-// FILTERS
-import uppercase  from './filters/uppercase';
+import { aboutCtrl } from './components/about';
+import { notFoundCtrl } from './components/notFound';
 
 import Engine from './core/engine';
 
 window.onload = function () {
 
-    const app = new Engine();
+    const mainTag = document.getElementById('output');
+
+    const app = new Engine(mainTag);
 
     // registering components
     app.addComponent('dad-component', dadCtrl);
     app.addComponent('child-component', childCtrl);
     app.addComponent('shared-component', sharedCtrl);
+    app.addComponent('about-component', aboutCtrl);
+    app.addComponent('not-found-component', notFoundCtrl);
 
-    // registering filters
-    app.addFilter('uppercase', uppercase);
+    // rendering the root (no ROUTER)
+    // app.rootRender(mainTag, 'dad-component');
 
-    // rendering the root
-    app.rootRender(document.getElementById('output'), 'dad-component');
+    // rendering the root with FE ROUTER
+    app.router
+        .addRoute('/', 'dad-component')
+        .addRoute('/about', 'about-component')
+        .addRoute('/about/:id/:counter', 'about-component')
+        .ifNotFound('not-found-component')
+        .start();
+
 }

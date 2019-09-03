@@ -1,5 +1,9 @@
 function template () {
     return html`<div class=${uppercase(this.name)} id="${this.id}">
+                <nav>
+                <a data-navigation href="/about"> About </a>
+                <a data-navigation href="/about/:${this.id}/${this.counter}"> About "with params"</a>
+                </nav>
                 <h3>Dad component</h3>  
                 <p>Counter: ${this.counter}</p>
                 <p>Shared: ${this.shared.counter}</p>
@@ -37,7 +41,7 @@ export function dadCtrl (id) {
             }
         },
         computed:{
-            interpolated (params) {
+            interpolated () {
                 return ` Clicked ${this.counter} times`;
             }
         },
