@@ -191,7 +191,8 @@ export default class Luce {
     addListners(theOne, componentInstance, i, that, root) {
         let $e = this;
         theOne.addEventListener(this.events[componentInstance.id][i].type, function (e) {
-            componentInstance.events[that.events[componentInstance.id][i].action].call(Object.assign(componentInstance.model, {router:$e.router}), e);
+            // passing the model and a reference to events and router
+            componentInstance.events[that.events[componentInstance.id][i].action].call(Object.assign(componentInstance.model, componentInstance.events, {router:$e.router}), e);
             console.log('Updated model: ', componentInstance);
         });
     }
