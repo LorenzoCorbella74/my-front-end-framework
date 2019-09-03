@@ -1,6 +1,6 @@
 # Luce.js
 
-***Luce.js*** è il risultato dei miei sforzi nella creazione di un framework FE avente tutte le principali caratteristiche dei framework attuali, realizzato unicamente per finalità didattiche. Per avere prestazioni in linea o superiori alle soluzioni basate sul Vistual DOM (React.js, Vue.js) per il Templating e Rendering engine è stata utilizzata la libreria [lit-html](https://github.com/polymer/lit-html).
+***Luce.js*** è il risultato dei miei sforzi nella creazione di un framework FE avente tutte le principali caratteristiche dei framework attuali, realizzato unicamente per finalità didattiche. Per avere prestazioni in linea o superiori alle soluzioni basate sul Virtual DOM (React.js, Vue.js) per il Templating e Rendering engine è stata utilizzata la libreria [lit-html](https://github.com/polymer/lit-html).
 
 ## FEATURES
 - [x] Componenti, componenti  innestati e istanze multiple di uno stesso componente
@@ -30,7 +30,7 @@ window.onload = function () {
 
     const mainTag = document.getElementById('output');
 
-    const app = new Engine(mainTag);
+    const app = new Luce(mainTag);
 
     // registering components
     app.addComponent('dad-component', dadCtrl);
@@ -125,15 +125,8 @@ Per usare i link all'interno dei template si deve specificare l'attributo ```dat
     <a data-navigation href="/about/:${this.id}/${this.counter}"> About "with params"</a>
 </nav>
 ```
-
 All'interno del componente l'engine inietta il router per poter leggere gli eventuali parametri passati nell'URl o per accedere ai metodi di navigazione.
-```html
- <nav>
-    <a data-navigation href="/about"> About </a>
-    <a data-navigation href="/about/:${this.id}/${this.counter}"> About "with params"</a>
-</nav>
-```
-```javascipt
+```javascript
 export function aboutCtrl (id) {
     return {
         id: id,
