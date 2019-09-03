@@ -3,8 +3,8 @@
 Queste circa ***350 righe*** di Javascript ES6 sono il risultato dei miei sforzi nella creazione di un framework FE avente ___tutte le principali caratteristiche dei framework attuali___ (component based, nestable components, two way binding, routing, http requests, etc), realizzato unicamente per finalità didattiche. Per il Templating e Rendering engine è stata utilizzata la libreria [lit-html](https://github.com/polymer/lit-html) che garantisce una performance superiore alle soluzioni che utilizzano il Virtual DOM.
 
 ## FEATURES
-- [x] Componenti tra loro innestati 
-- [x] API componenti simile a quella di [Vue.js](https://vuejs.org) con ```data``` del componente proxato e ```Computed properties```
+- [x] Componenti, componenti  innestati e istanze multiple di uno stesso componente
+- [x] API dei componenti simile a quella di [Vue.js](https://vuejs.org) con ```data``` del componente proxato e ```Computed properties```
 - [x] Istanze diverse dello stesso componente
 - [x] Gestione automatizzata degli eventi della singola istanza del componente
 - [x] hook del componente: onInit, onPropsChange, onDestroy
@@ -45,7 +45,7 @@ window.onload = function () {
 
 ## Components
 
-I componenti contengono in un unico file```.js``` la funzione responsabile della generazione del template ( in cui è possibile avere componenti tra loro innestati tramite l'attributo ```data-component```)e l'oggetto rappresentativo del componente, contenente il nome, dati del modello, funzioni associate ad aventi e computed properties. Per esigenze didattiche non sono stati utilizzati gli eventi di [lit-html](https://github.com/polymer/lit-html)) ma invece automaticamente generati dal template tramite l'attributo ```data-event="click:add"``` valorizzato con ```<tipo evento>:<funzione associata>```.
+I componenti contengono in un unico file```.js``` la funzione responsabile della generazione del template ( in cui è possibile avere componenti tra loro innestati tramite l'attributo ```data-component```) e l'oggetto rappresentativo del componente, contenente il nome, dati del modello, funzioni associate ad aventi e computed properties. Per esigenze didattiche non sono stati utilizzati gli eventi di [lit-html](https://github.com/polymer/lit-html)) ma invece automaticamente generati dal template tramite l'attributo ```data-event="click:add"``` valorizzato con ```<tipo evento>:<funzione associata>```. Da notare che è consigliato mettere nel template ```class=${uppercase(this.name)}``` per eventualemnte distinguere gli stili  relativi esclusivamente ad un unico componente (magari anche in un file .sass distinto) mentre è obbligatorio inserire ```id="${this.id}"``` che viene iniettato dall'engine in fase di creazione delle diverse istanze dei componenti.
 
 Le proprietà passate da un componente ad un suo figlio sono indicate tramite l'attributo ```data-props="form:name"``` valorizzato con ```<nome proprietà>:<nome proprietà>...```. 
 
@@ -107,9 +107,6 @@ window.onload = function () {
     app.addComponent('shared-component', sharedCtrl);
     app.addComponent('about-component', aboutCtrl);
     app.addComponent('not-found-component', notFoundCtrl);
-
-    // rendering the root (no ROUTER)
-    // app.rootRender(mainTag, 'dad-component');
 
     // rendering the root with FE ROUTER
     app.router
