@@ -19,11 +19,11 @@ window.onload = function () {
     const app = new Engine(mainTag);
 
     // registering components
-    app.addComponent('dad-component', dadCtrl);
-    app.addComponent('child-component', childCtrl);
-    app.addComponent('shared-component', sharedCtrl);
-    app.addComponent('about-component', aboutCtrl);
-    app.addComponent('not-found-component', notFoundCtrl);
+    app.addComponent('dad-component', dadCtrl)
+        .addComponent('child-component', childCtrl)
+        .addComponent('shared-component', sharedCtrl)
+        .addComponent('about-component', aboutCtrl)
+        .addComponent('not-found-component', notFoundCtrl)
 
     // rendering the root (no ROUTER)
     // app.rootRender(mainTag, 'dad-component');

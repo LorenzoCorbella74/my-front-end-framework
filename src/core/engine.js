@@ -17,6 +17,7 @@ export default class Luce {
 
     addComponent(key, factoryFn) {
         this.componentsRegistry[key] = factoryFn;
+        return this;
     }
 
     propagateChange(a){
