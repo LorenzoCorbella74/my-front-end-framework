@@ -4,11 +4,7 @@ const parseResponse = async response => {
   if (status !== 204) {
     data = await response.json()
   }
-
-  return {
-    status,
-    data
-  }
+  return {status,data};
 }
 
 const request = async params => {

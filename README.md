@@ -125,7 +125,7 @@ Per usare i link all'interno dei template si deve specificare l'attributo ```dat
     <a data-navigation href="/about/:${this.id}/${this.counter}"> About "with params"</a>
 </nav>
 ```
-All'interno del componente l'engine inietta il router per poter leggere gli eventuali parametri passati nell'URl o per accedere ai metodi di navigazione.
+All'interno del componente l'engine inietta $router per poter leggere gli eventuali parametri passati nell'URl o per accedere ai metodi di navigazione.
 ```javascript
 export function aboutCtrl (id) {
     return {
@@ -137,14 +137,31 @@ export function aboutCtrl (id) {
         },
         events: {
             gotoHome () {
-                this.router.navigate('/');
+                this.$router.navigate('/');
             }
         },
         onInit () {
-            console.log('Route params', this.router.params);
+            console.log('Route params', this.$router.params);
         }
     }
 }
+```
+
+## HTTP
+All'interno del componente l'engine inietta $http per fare chiamate http (```.get```, ```.post```, ```.put```, ```.patch```, ```.delete```):
+```javascript
+async getRandom () {
+                try {
+                    this.loading = true;
+                    let toAvoidCors = 'https://cors-anywhere.herokuapp.com';
+                    let response = await this.$http.get(toAvoidCors + '/https://swapi.co/api/people');
+                    this.items = response.results;
+                    this.loading = false;
+                } catch (error) {
+                    console.log('Error: ', error);
+                    this.loading = false;
+                }
+            }
 ```
 
 ## Built With

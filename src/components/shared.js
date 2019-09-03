@@ -16,7 +16,6 @@ function template () {
 
 import { html } from 'lit-html';
 import { repeat } from 'lit-html/directives/repeat';
-import http from './../core/http';
 
 import { shared } from './shared-service';
 
@@ -43,18 +42,17 @@ export function sharedCtrl (id) {
             remove: function (e) {
                 this.shared.counter--;
             },
-            getRandom () {
-                this.loading = true;
-                let toAvoidCors = 'https://cors-anywhere.herokuapp.com';
-                http.get(toAvoidCors + '/https://swapi.co/api/people')
-                    .then(response => {
-                        this.items = response.results;
-                        this.loading = false;
-                    })
-                    .catch(error => {
-                        console.log('Error: ', error);
-                        this.loading = false;
-                    });
+            async getRandom () {
+                try {
+                    this.loading = true;
+                    let toAvoidCors = 'https://cors-anywhere.herokuapp.com';
+                    let response = await this.$http.get(toAvoidCors + '/https://swapi.co/api/people');
+                    this.items = response.results;
+                    this.loading = false;
+                } catch (error) {
+                    console.log('Error: ', error);
+                    this.loading = false;
+                }
             }
         }
     }

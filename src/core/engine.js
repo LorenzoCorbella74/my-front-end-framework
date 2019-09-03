@@ -2,6 +2,7 @@ import Watcher from './watcher';
 import { render } from 'lit-html';
 import set from 'lodash.set';
 import router from './router';
+import http from './http';
 
 export default class Luce {
 
@@ -11,6 +12,7 @@ export default class Luce {
         this.istances = [];
         this.routerOutlet = main;
         this.router = router(this, this.routerOutlet);
+        this.http = http;
     }
 
     addComponent(key, factoryFn) {
@@ -80,7 +82,7 @@ export default class Luce {
             // running the init of the component
             if (a.onInit && typeof a.onInit === 'function') {
                 // passing the model and a reference to events and router
-                let x = Object.assign(a.model, a.events, {router:$e.router});
+                let x = Object.assign(a.model, a.events, {$router:$e.router, $http: $e.http});
                 a.onInit.call(x);
             }
             return a;
@@ -192,7 +194,7 @@ export default class Luce {
         let $e = this;
         theOne.addEventListener(this.events[componentInstance.id][i].type, function (e) {
             // passing the model and a reference to events and router
-            componentInstance.events[that.events[componentInstance.id][i].action].call(Object.assign(componentInstance.model, componentInstance.events, {router:$e.router}), e);
+            componentInstance.events[that.events[componentInstance.id][i].action].call(Object.assign(componentInstance.model, componentInstance.events, {$router:$e.router, $http: $e.http}), e);
             console.log('Updated model: ', componentInstance);
         });
     }

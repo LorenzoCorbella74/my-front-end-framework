@@ -19,11 +19,11 @@ export function aboutCtrl (id) {
         },
         events: {
             gotoHome () {
-                this.router.navigate('/');
+                this.$router.navigate('/');
             }
         },
         onInit () {
-            console.log('Route params', this.router.params);
+            console.log('Route params', this.$router.params);
         }
     }
 }
