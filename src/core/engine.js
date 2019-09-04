@@ -10,8 +10,7 @@ export default class Luce {
         this.events = {};
         this.componentsRegistry = {};
         this.istances = [];
-        this.routerOutlet = main;
-        this.router = router(this, this.routerOutlet);
+        this.router = router(this, main);
         this.http = http;
     }
 
@@ -20,7 +19,7 @@ export default class Luce {
         return this;
     }
 
-    propagateChange(a){
+    propagateChange(a) {
         let sonSInstance = this.istances.filter(e => e.parentId === a.id);
         sonSInstance.forEach(sonIstance => {
             render(this.compileTemplate(sonIstance), sonIstance.element); // only for the relevant component
@@ -52,8 +51,12 @@ export default class Luce {
                             console.log(`${key} updated with value ${val}`);
                             let instance = $e.istances.find(e => e.id === a.id);
                             render($e.compileTemplate(instance), instance.element); // only for the relevant component
+                            // check if there are new child components...
+                            $e.checkComponentThree(instance.element, instance);
                             // FIXME: updating sons only if props change 
                             $e.propagateChange(a);
+                            // update events  
+                            // $e.mapEvents(instance.element, instance);
                         }
                     }
                     Object.defineProperty(destination, key, props);
@@ -83,8 +86,8 @@ export default class Luce {
             // running the init of the component
             if (a.onInit && typeof a.onInit === 'function') {
                 // passing the model and a reference to events and router
-                let x = Object.assign(a.model, a.events, {$router:$e.router, $http: $e.http});
-                a.onInit.call(x);
+                let scope = Object.assign(a.model, a.events, { $router: $e.router, $http: $e.http, $ele: a.element });
+                a.onInit.call(scope);
             }
             return a;
         } else {
@@ -102,7 +105,7 @@ export default class Luce {
                 let props = {
                     configurable: true,
                     enumerable: true,
-                    set() {},
+                    set() { },
                     get() {
                         const watcher = scope._computedWatchers && scope._computedWatchers[key];
                         if (watcher) return watcher.value;
@@ -118,9 +121,8 @@ export default class Luce {
         const props = root.querySelectorAll('[data-props]');
         child.forEach(element => {
             if (element.dataset.component) {
-                let first = element.id;
                 let propsToBePassed = {};
-                if (props.length>0) {
+                if (props.length > 0) {
                     props.forEach(element => {
                         let models = element.dataset.props.split(':');
                         models.forEach(key => {
@@ -132,7 +134,7 @@ export default class Luce {
                 let sonInstance = this.createIstance(element.dataset.component, element.id, root, element, propsToBePassed, componentInstance);
                 render(this.compileTemplate(sonInstance), element);
                 // events are registered only the first time...
-                if (!first) {
+                if (!element.id) {
                     this.mapEvents(element, sonInstance);
                 }
                 this.checkComponentThree(element, sonInstance);
@@ -152,9 +154,8 @@ export default class Luce {
     }
 
     rootRender(root, key, urlParams) {
-        // console.log('urlParams :', urlParams);
-        this.router.params = Object.assign({},urlParams);
-        let componentInstance = this.createIstance(key, null, root, root, null, {id:null});
+        this.router.params = Object.assign({}, urlParams);
+        let componentInstance = this.createIstance(key, null, root, root, null, { id: null });
         render(this.compileTemplate(componentInstance), root);
         // Root's events
         this.mapEvents(root, componentInstance)
@@ -163,22 +164,36 @@ export default class Luce {
         console.log('Components istances: ', this.istances);
     }
 
+    notAlreadyPresent(id, item) {
+        let result = this.events[id].find(e => e.element == item.element && e.type == item.type && e.action == item.action);
+        return result !== null;
+    }
+
     mapEvents(root, componentInstance) {
         let $e = this;
-        this.events[componentInstance.id] = [];
+        this.events[componentInstance.id] = this.events[componentInstance.id] || [];
         // 1) Events handlers for USER EVENTS via component methods
         const theOnes = root.querySelectorAll('[data-event]'); // solo sul componente
         let that = this;
         theOnes.forEach((theOne, i) => {
             let str = theOne.dataset.event.split(':');
-            this.events[componentInstance.id][i] = {
+            let name = /^.*?(?=\()/g.exec(str[1]);
+            let params = /\(([^)]+)\)/g.exec(str[1]);
+            // we add the event if not already present
+            const item = {
                 type: str[0],
-                action: str[1],
-                element: root
+                action: name ? name[0] : str[1],
+                params: params ? params[1].split(',') : null,
+                element: theOne
             };
-            this.addListners(theOne, componentInstance, i, that, root);
+            if (that.notAlreadyPresent(componentInstance.id, item)) {
+                that.events[componentInstance.id].push(item);
+                that.addListners(theOne, componentInstance, i, that, root);
+            } else {
+                console.log('Already present: ', that.events[componentInstance.id][i]);
+                //     // that.removeListners(theOne, componentInstance, i, that, root);
+            }
         });
-        console.log('Events: ', this.events);
         // 2) handlers for user INPUTS (DATA BINDING)
         const twoWays = root.querySelectorAll('[data-model]'); // solo sul componente
         twoWays.forEach((element, i) => {
@@ -189,13 +204,16 @@ export default class Luce {
                 }
             }
         });
+        console.log('Events: ', this.events);
     }
 
     addListners(theOne, componentInstance, i, that, root) {
         let $e = this;
         theOne.addEventListener(this.events[componentInstance.id][i].type, function (e) {
-            // passing the model and a reference to events and router
-            componentInstance.events[that.events[componentInstance.id][i].action].call(Object.assign(componentInstance.model, componentInstance.events, {$router:$e.router, $http: $e.http}), e);
+            // passing the model and a reference to events, router and the html element itself
+            let scope = Object.assign(componentInstance.model, componentInstance.events, { $router: $e.router, $http: $e.http, $ele: componentInstance.element })
+            let params = that.events[componentInstance.id][i].params ? [e, ...that.events[componentInstance.id][i].params] : [e];
+            componentInstance.events[that.events[componentInstance.id][i].action].apply(scope, params);
             console.log('Updated model: ', componentInstance);
         });
     }

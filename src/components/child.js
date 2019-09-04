@@ -9,7 +9,9 @@ function templateFactory() {
         <button data-event="click:alertMe"> alert from child </button>
         <hr>
         <button data-event="click:toggle"> toggle </button>
-        ${this.visible ? html`<p>Non visible: ${this.counter}</p>` : ''}
+        ${this.visible ? html`<div><p>Non visible: ${this.counter}</p>
+        <div data-component="about-component"></div></div>`
+         : ''}
     </div > `;
 }
 import { html } from 'lit-html';

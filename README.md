@@ -5,15 +5,19 @@
 ## FEATURES
 - [x] Componenti, componenti  innestati e istanze multiple di uno stesso componente
 - [x] API dei componenti simile a quella di [Vue.js](https://vuejs.org) con il modello all'interno della proprietà```data``` e reimplementate le```Computed properties```
-- [x] Gestione automatizzata degli eventi della singola istanza del componente
-- [x] hook del componente: onInit, onPropsChange, onDestroy
-- [x] Props passate da un componente ad un suo figlio
+- [x] hook del componente: onInit, onPropsChange
 - [x] Two way data binding  
 - [x] wrapper di [fetch API](https://github.com/github/fetch) per chiamate HTTP
-- [x] Filters (implementato ma non funzionante :-( )
 - [x] Client side routing system based on [History API](https://developer.mozilla.org/en-US/docs/Web/API/History), routes with parameters, 
 
+## ISSUES
+- [x] Gestione automatizzata degli eventi della singola istanza del componente
+- [x] Filters (implementato ma non funzionante :-( )
+- [x] Props passate da un componente ad un suo figlio
+
+
 ### TODO:
+- [] hook del componente: onDestroy
 - [ ] Event bus: shared state management
 - [ ] "queue dei cambiamenti" per avere un unico cambiamento in caso di modifica contemporanea di più proprietà 
 - [ ] reattività di un modello condiviso tra componenti diversi
