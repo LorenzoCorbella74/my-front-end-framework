@@ -68,13 +68,12 @@ export default class Luce {
             });
     }
 
-    createIstance(key, id, root, element, props, parent) {
+    createIstance(key, id, element, props, parent) {
         let $e = this
         if (!id) {
             let randomId = Math.floor(Math.random() * 1000000);
             let a = this.componentsRegistry[key](`${key}:${randomId}`);
             a.parentId = parent.id;
-            a.rootId = root.id;
             a.element = element;
             a.model = {};
             // merging the data of the component with the data received from parent component
@@ -91,7 +90,8 @@ export default class Luce {
             }
             return a;
         } else {
-            return this.istances.find(e => e.id === element.id);
+            // returning the cached components
+            return this.istances.find(e => e.id === element.children[0].id);
         }
     }
 
@@ -131,7 +131,8 @@ export default class Luce {
                     });
                 }
                 // if there is the id returns the previously created istance
-                let sonInstance = this.createIstance(element.dataset.component, element.id, root, element, propsToBePassed, componentInstance);
+                let id = element.children && element.children.length ? element.children[0].id : null;
+                let sonInstance = this.createIstance(element.dataset.component, id, element, propsToBePassed, componentInstance);
                 render(this.compileTemplate(sonInstance), element);
                 // events are registered only the first time...
                 if (!element.id) {
@@ -155,7 +156,7 @@ export default class Luce {
 
     rootRender(root, key, urlParams) {
         this.router.params = Object.assign({}, urlParams);
-        let componentInstance = this.createIstance(key, null, root, root, null, { id: null });
+        let componentInstance = this.createIstance(key, null, root, null, root);
         render(this.compileTemplate(componentInstance), root);
         // Root's events
         this.mapEvents(root, componentInstance)
