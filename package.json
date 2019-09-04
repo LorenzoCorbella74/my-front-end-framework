@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "lit-html": "^1.1.2",
-    "lodash.set": "^4.3.2"
+    "lodash.set": "^4.3.2",
+    "on-change": "^1.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
