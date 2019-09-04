@@ -17,11 +17,11 @@
 
 
 ### TODO:
-- [] hook del componente: onDestroy
 - [ ] Event bus: shared state management
 - [ ] "queue dei cambiamenti" per avere un unico cambiamento in caso di modifica contemporanea di più proprietà 
 - [ ] reattività di un modello condiviso tra componenti diversi
-- [ ] rimozione eventi se il componente è distrutto
+- [ ] rimozione eventi se il componente o una sua parte sono distrutto
+- [ ] hook del componente: onDestroy
 
 # Documentation
 
