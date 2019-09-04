@@ -9,10 +9,10 @@
 - [x] Two way data binding  
 - [x] wrapper di [fetch API](https://github.com/github/fetch) per chiamate HTTP
 - [x] Client side routing system based on [History API](https://developer.mozilla.org/en-US/docs/Web/API/History), routes with parameters, 
+- [x] Filters in template as pure function
 
 ## ISSUES
 - [x] Gestione automatizzata degli eventi della singola istanza del componente
-- [x] Filters (implementato ma non funzionante :-( )
 - [x] Props passate da un componente ad un suo figlio
 
 
