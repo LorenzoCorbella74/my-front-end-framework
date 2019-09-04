@@ -172,15 +172,18 @@ export default class Luce {
     }
 
     notAlreadyPresent (id, item) {
-        let result = this.events[id].find(e => e.element == item.element && e.type == item.type && e.action == item.action);
-        return result !== null;
+        let result = this.events[id].findIndex(e => e.element == item.element && e.type == item.type && e.action == item.action);
+        return result === -1;
     }
 
     mapEvents (root, componentInstance) {
         let $e = this;
         this.events[componentInstance.id] = this.events[componentInstance.id] || [];
         // 1) Events handlers for USER EVENTS via component methods
-        const theOnes = root.querySelectorAll('[data-event]'); // FIXME: solo sul componente , :not([data-component]), 
+        
+        // only events of the component but NOT the ones inside data-components
+        // const theOnes = Array.from(root.querySelectorAll('[data-event]')).filter(item => !item.parentNode.closest('[data-component]'));
+        const theOnes = root.querySelectorAll('[data-event]'); 
         let that = this;
         theOnes.forEach((theOne, i) => {
             let str = theOne.dataset.event.split(':');
@@ -194,11 +197,11 @@ export default class Luce {
                 element: theOne
             };
             if (that.notAlreadyPresent(componentInstance.id, item)) {
-                that.events[componentInstance.id][i] = item;
+                that.events[componentInstance.id][i]=item;
                 that.addListners(theOne, componentInstance, i, that);
             } else {
-                console.log('Already present: ', that.events[componentInstance.id][i]);
-                //     // that.removeListners(theOne, componentInstance, i, that, root);
+                console.log('Already present: ', item);
+                // that.removeListners(theOne, componentInstance, i, that, root);
             }
         });
         // 2) handlers for user INPUTS (DATA BINDING)
