@@ -1,27 +1,26 @@
 # Luce.js
 
-***Luce.js*** è il risultato dei miei sforzi nella creazione di un framework FE avente tutte le principali caratteristiche dei framework attuali, realizzato unicamente per finalità didattiche. Per avere prestazioni in linea o superiori alle soluzioni basate sul Virtual DOM si è utilizzato per il Templating e Rendering engine la libreria [lit-html](https://github.com/polymer/lit-html) mentre per guardare ai cambiamenti del modello dei dati si è usato [on-change](https://github.com/sindresorhus/on-change).
+***Luce.js*** è il risultato dei miei sforzi nella creazione di un framework FE avente tutte le principali caratteristiche dei framework attuali, realizzato unicamente per finalità didattiche. Per avere prestazioni in linea o superiori alle soluzioni basate sul Virtual DOM si è utilizzato per il Templating e Rendering engine la libreria [lit-html](https://github.com/polymer/lit-html) mentre per guardare e reagire ai cambiamenti del modello dei dati si è usato [on-change](https://github.com/sindresorhus/on-change).
 
 ## FEATURES
 - [x] Componenti, componenti  innestati e istanze multiple di uno stesso componente
-- [x] API dei componenti simile a quella di [Vue.js](https://vuejs.org) con il modello all'interno della proprietà```data``` e reimplementate le```Computed properties```
+- [x] API dei componenti simile a quella di [Vue.js](https://vuejs.org) con modello reattivo all'interno della proprietà```data``` e reimplementate le```Computed properties```
 - [x] hook del componente: onInit, onPropsChange
 - [x] Two way data binding  
 - [x] wrapper di [fetch API](https://github.com/github/fetch) per chiamate HTTP
 - [x] Client side routing system based on [History API](https://developer.mozilla.org/en-US/docs/Web/API/History), routes with parameters, 
 - [x] Filters in template as pure function
-- [x] Props passate da un componente ad un suo figlio
+- [x] Props passate da un componente a componente/i figli
 - [x] Gestione automatizzata degli eventi della singola istanza del componente
 
-## ISSUES
-- [x] eventi della singola istanza del componente padre doppiati a quelli dei figli
-- [x] verifica effettiva del cambiamento delle props per onPropsChange
-- [x] reattività di un modello condiviso tra componenti diversi
+## BUGS
+- eventi della singola istanza del componente padre doppiati a quelli dei figli e generale rimozione se gli elementi vengono rimossi dal dom
+- verifica effettiva del cambiamento delle props per onPropsChange
+- reattività di un oggetto condiviso tra componenti diversi ( al momento scatena cambiamenti al modello standard in caso di proprietà con nome uguale...)
 
 ### TODO:
 - [ ] Event bus: shared state management
-- [ ] "queue dei cambiamenti" per avere un unico cambiamento in caso di modifica contemporanea di più proprietà 
-- [ ] rimozione eventi se il componente o una sua parte sono rimossi dal dom
+- [ ] "queue dei cambiamenti" per avere un unico re rendering in caso di modifica contemporanea di più proprietà 
 - [ ] hook del componente: onDestroy
 
 # Documentation
