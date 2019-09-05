@@ -1,10 +1,10 @@
 function templateFactory () {
     return html`
-    <div class="${this.name}" id="${this.id}">
-        <h3>About page</h3>  
-        <a data-navigation href="/"> Back to home</a>
+    <div class="${this.name} content" id="${this.id}">
+        <h3 class="title">About page</h3>  
+        <a class="button is-link" data-navigation href="/"> Back to home</a>
         <p>just a placeholder text</p>
-        <button data-event="click:gotoHome">Home</button>
+        <button class="button is-primary" data-event="click:gotoHome">Home</button>
     </div > `;
 }
 import { html } from 'lit-html';

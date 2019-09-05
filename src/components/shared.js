@@ -1,22 +1,24 @@
 function template() {
-    return html`<div class=${this.name} id="${this.id}">
+    return html`<div class="${this.name} content has-background-white-bis" id="${this.id}">
+    <h3 class="title">Component with nested components</h3>       
             <p>Shared: ${this.shared.counter}</p>
-            <button data-event="click:add"> + </button>
+            <button class="button is-primary" data-event="click:add"> + </button>  
             <hr>
             <h3>Esempio di lista:</h3>
             ${this.loading ? html`<div class="loader"></div>` : html`
-            <table style="width:100%">
+            <table class="table is-hoverable is-fullwidth">
             <tr>
               <th>Name</th>
               <th>Height</th> 
               <th>Mass</th>
+              <th></th>
             </tr>
             ${repeat(this.items, i => i.name, (e, index) => html`
             <tr>
               <td>${e.name}</td>
               <td>${e.height}</td> 
               <td>${e.mass}</td>
-              <td><button data-event="click:deleteItem(${index})">x</button></td>
+              <td><button class="button is-danger" data-event="click:deleteItem(${index})">x</button></td>
             </tr>`)}
           </table>`}
             

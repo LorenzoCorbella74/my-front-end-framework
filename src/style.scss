@@ -1,39 +1,17 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300');
-@import url('https://fonts.googleapis.com/css?family=Open+Sans');
-
-
-body {
-    color: white;
-    background-color: steelblue;
-    width: 80%;
-    margin: 24px auto;
-    font-family: 'Open Sans', sans-serif;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: 'Open Sans Condensed', sans-serif;
-}
-
 /* ogni componente metterà i suoi stili gerarchizzati sulla classe principale */
 .dad-component {
-    padding: 10px;
-    border: 1px dotted white;
+    padding: 14px;
     border: 2px dotted green;
 }
 
 .child-component {
-    padding: 10px;
-    border: 2px dotted red;
+    padding: 14px;
+    border: 2px solid red;
     margin-bottom: 12px;
 }
 
 .shared-component {
-    padding: 10px;
+    padding: 14px;
     border: 2px dotted pink;
     margin-bottom: 12px;
 
