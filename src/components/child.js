@@ -1,10 +1,10 @@
 function templateFactory() {
     return html`
-    <div class="${this.name} content has-background-white-ter" id="${this.id}">
+    <div class="${this.name} content has-background-grey-lighter" id="${this.id}">
         <h3 class="title">Child component</h3>  
         <p>componente figlio: ${this.counter}</p>
         <hr>
-        <p>passate da parent diretto via props: ${this.form.name} - ${this.form.surname}</p>
+        <p>From parent component via <span class="tag is-light">props</span>: ${this.form.name}</p> 
         <hr>
         <button class="button is-primary" data-event="click:alertMe"> alert from child </button>
         <hr>

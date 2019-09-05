@@ -12,30 +12,15 @@ function template () {
                 <p>Shared: ${this.shared.counter}</p>
                 <button class="button is-primary" data-event="click:add"> + </button>
                 <button class="button is-primary" data-event="click:remove"> - </button>
-                <p><strong>Computed properties:</strong> ${this.interpolated}</p>
-                <hr> 
-                <p><strong>TWO way data binding:</strong> ${this.form.name}</p>
+                <br/>
+                <p><span class="tag is-light"><strong>Computed properties:</strong></span>  ${this.interpolated}</p>
+                <p><span class="tag is-light"><strong>TWO way data binding:</strong></span> ${this.form.name}</p>
                 <div class="field">
                     <label class="label">Name</label>
                     <div class="control">
                         <input class="input" type="text" placeholder="Your name" data-model="form.name" value="${this.form.name}">
                     </div>
                 </div>
-                <div class="field">
-                    <label class="label">Surname</label>
-                    <div class="control">
-                        <input class="input" type="text" placeholder="Your surname" data-model="form.surname" value="${this.form.surname}">
-                    </div>
-                </div>
-                <div class="field">
-                    <div class="control">
-                    <label class="checkbox">
-                        <input type="checkbox" data-model="form.married" name="married">
-                        Married
-                    </label>
-                    </div>
-                </div>
-
                 <div data-component="child-component" data-props="form"></div>
                 <div data-component="shared-component" data-props="form"></div>
             </div>`; // ${this.form.married ? 'checked':''}
@@ -55,9 +40,7 @@ export function dadCtrl (id) {
             counter: 0,
             shared: shared,
             form: {
-                name: 'Lore',
-                surname: 'Corbe',
-                married: false
+                name: 'Lorenzo'
             }
         },
         computed: {
