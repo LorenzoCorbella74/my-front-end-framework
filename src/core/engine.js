@@ -4,6 +4,8 @@ import set from 'lodash.set';
 import router from './router';
 import http from './http';
 
+import onChange from 'on-change';
+
 export default class Luce {
 
     constructor(main) {
@@ -14,15 +16,15 @@ export default class Luce {
         this.http = http;
     }
 
-    addComponent (key, factoryFn) {
+    addComponent(key, factoryFn) {
         this.componentsRegistry[key] = factoryFn;
         return this;
     }
 
-    propagateChange (a) {
+    propagateChange(a) {
         let sonSInstance = this.istances.filter(e => e.parentId === a.id);
         sonSInstance.forEach(sonIstance => {
-            render(this.compileTemplate(sonIstance), sonIstance.element); // only for the relevant component
+            render(this.compiledTemplate(sonIstance), sonIstance.element); // only for the relevant component
             if (sonIstance.onPropsChange && typeof sonIstance.onPropsChange === 'function') {
                 // passing the model and a reference to events
                 let x = Object.assign(sonIstance.model, sonIstance.events);
@@ -32,49 +34,28 @@ export default class Luce {
         });
     }
 
-    // when the model change (from asyncronous events) update relevant component and sons
-    proxyMe (source, destination, a) {
+    proxyMe(source, a) {
         let $e = this;
-        Object
-            .keys(source)
-            .forEach(key => {
-                // primitive
-                if (typeof source[key] !== 'object' && source[key] !== null) {
-                    let props = {
-                        configurable: true,
-                        enumerable: true,
-                        get () {
-                            return source[key];
-                        },
-                        set (val) {
-                            source[key] = val;
-                            console.log(`${key} updated with value ${val}`);
-                            let instance = $e.istances.find(e => e.id === a.id);
-                            render($e.compileTemplate(instance), instance.element); // only for the relevant component
-                            // check if there are new child components...
-                            $e.checkComponentThree(instance.element, instance);
-                            // FIXME: updating sons only if props change 
-                            $e.propagateChange(a);
-                            // FIXME: update events  
-                            $e.mapEvents(instance.element, instance);
-                        }
-                    }
-                    Object.defineProperty(destination, key, props);
-                // FIXME: array not working
-                } else if (Array.isArray(source[key])) {
-                    source[key].forEach((element, i) => {
-                        destination[key][i] = destination[key][i] || {};
-                        this.proxyMe(element, destination[key][i], a);
-                    });
-                // oggetti
-                } else {
-                    destination[key] = destination[key] || {};
-                    this.proxyMe(source[key], destination[key], a)
-                }
-            });
+        a.model = onChange(source, function (path, value, previousValue) {
+            // console.log('Model:', this);
+            // console.log(`path: ${path}`);
+            // if(value && previousValue){
+            //     console.log(`new: ${JSON.stringify(value)} - old: ${JSON.stringify(previousValue)}`);
+            // }
+            let instance = $e.istances.find(e => e.id === a.id);
+            if(instance){
+                render($e.compiledTemplate(instance), instance.element); // only for the relevant component
+                // check if there are new child components...
+                $e.checkComponentThree(instance.element, instance);
+                // FIXME: updating sons only if props change 
+                $e.propagateChange(a);
+                // FIXME: update events  
+                $e.mapEvents(instance.element, instance);
+            }    
+        });
     }
 
-    createIstance (key, id, element, props, parent) {
+    createOrGetCachedIstance(key, id, element, props, parent) {
         let $e = this
         if (!id) {
             let randomId = Math.floor(Math.random() * 1000000);
@@ -84,7 +65,8 @@ export default class Luce {
             a.model = {};
             // merging the data of the component with the data received from parent component
             a.data = props ? Object.assign(a.data, props) : a.data;
-            this.proxyMe(a.data, a.model, a);
+            
+            this.proxyMe(a.data, a);    // a.model is listening for changes
 
             if (a.computed) this.initComputed(a.model, a.computed);
             this.istances.push(a);
@@ -101,7 +83,7 @@ export default class Luce {
         }
     }
 
-    initComputed (scope, computed) {
+    initComputed(scope, computed) {
         scope._computedWatchers = Object.create(null);
         for (const key in computed) {
             let valueFn = computed[key];
@@ -111,8 +93,8 @@ export default class Luce {
                 let props = {
                     configurable: true,
                     enumerable: true,
-                    set () { },
-                    get () {
+                    set() { },
+                    get() {
                         const watcher = scope._computedWatchers && scope._computedWatchers[key];
                         if (watcher) return watcher.value;
                     }
@@ -122,7 +104,7 @@ export default class Luce {
         }
     }
 
-    checkComponentThree (root, componentInstance) {
+    checkComponentThree(root, componentInstance) {
         const child = root.querySelectorAll('[data-component]');
         const props = root.querySelectorAll('[data-props]');
         child.forEach(element => {
@@ -138,8 +120,8 @@ export default class Luce {
                 }
                 // if there is the id returns the previously created istance
                 let id = element.children && element.children.length ? element.children[0].id : null;
-                let sonInstance = this.createIstance(element.dataset.component, id, element, propsToBePassed, componentInstance);
-                render(this.compileTemplate(sonInstance), element);
+                let sonInstance = this.createOrGetCachedIstance(element.dataset.component, id, element, propsToBePassed, componentInstance);
+                render(this.compiledTemplate(sonInstance), element);
                 // events are registered only the first time...
                 if (!id) {
                     this.mapEvents(element, sonInstance);
@@ -151,7 +133,7 @@ export default class Luce {
         });
     }
 
-    compileTemplate (component) {
+    compiledTemplate(component) {
         let compiledTemplate = component.template.call(Object.assign({
             name: component.name,
             id: component.id,
@@ -160,10 +142,10 @@ export default class Luce {
         return compiledTemplate;
     }
 
-    rootRender (root, key, urlParams) {
+    rootRender(root, key, urlParams) {
         this.router.params = Object.assign({}, urlParams);
-        let componentInstance = this.createIstance(key, null, root, null, root);
-        render(this.compileTemplate(componentInstance), root);
+        let componentInstance = this.createOrGetCachedIstance(key, null, root, null, root);
+        render(this.compiledTemplate(componentInstance), root);
         // Root's events
         this.mapEvents(root, componentInstance)
         // Check component three
@@ -171,19 +153,20 @@ export default class Luce {
         console.log('Components istances: ', this.istances);
     }
 
-    notAlreadyPresent (id, item) {
+    notAlreadyPresent(id, item) {
         let result = this.events[id].findIndex(e => e.element == item.element && e.type == item.type && e.action == item.action);
         return result === -1;
     }
 
-    mapEvents (root, componentInstance) {
+    mapEvents(root, componentInstance) {
         let $e = this;
         this.events[componentInstance.id] = this.events[componentInstance.id] || [];
         // 1) Events handlers for USER EVENTS via component methods
-        
+
         // only events of the component but NOT the ones inside data-components
         // const theOnes = Array.from(root.querySelectorAll('[data-event]')).filter(item => !item.parentNode.closest('[data-component]'));
-        const theOnes = root.querySelectorAll('[data-event]'); 
+        const test = root.querySelectorAll('*>*:not([data-component]) > [data-event]');
+        const theOnes = root.querySelectorAll('[data-event]');
         let that = this;
         theOnes.forEach((theOne, i) => {
             let str = theOne.dataset.event.split(':');
@@ -197,10 +180,10 @@ export default class Luce {
                 element: theOne
             };
             if (that.notAlreadyPresent(componentInstance.id, item)) {
-                that.events[componentInstance.id][i]=item;
+                that.events[componentInstance.id][i] = item;
                 that.addListners(theOne, componentInstance, i, that);
             } else {
-                console.log('Already present: ', item);
+                // console.log('Already present: ', item);
                 // that.removeListners(theOne, componentInstance, i, that, root);
             }
         });
@@ -217,7 +200,7 @@ export default class Luce {
         console.log('Events: ', this.events);
     }
 
-    addListners (htmlElement, componentInstance, i, that) {
+    addListners(htmlElement, componentInstance, i, that) {
         let $e = this;
         htmlElement.addEventListener(this.events[componentInstance.id][i].type, function (e) {
             // passing the model and a reference to events, router and the html element itself
