@@ -48,9 +48,9 @@ export default class Luce {
                 // check if there are new child components...
                 $e.checkComponentThree(instance.element, instance);
                 // FIXME: updating sons only if props change 
-                $e.propagateChange(a);
+                // $e.propagateChange(a);
                 // FIXME: update events  
-                $e.mapEvents(instance.element, instance);
+                // $e.mapEvents(instance.element, instance);
             }    
         });
     }
@@ -122,10 +122,16 @@ export default class Luce {
                 let id = element.children && element.children.length ? element.children[0].id : null;
                 let sonInstance = this.createOrGetCachedIstance(element.dataset.component, id, element, propsToBePassed, componentInstance);
                 render(this.compiledTemplate(sonInstance), element);
-                // events are registered only the first time...
-                if (!id) {
-                    this.mapEvents(element, sonInstance);
+                // TODO: only when changed
+                if (sonInstance.onPropsChange && typeof sonInstance.onPropsChange === 'function') {
+                    // passing the model and a reference to events
+                    let x = Object.assign(sonInstance.model, sonInstance.events);
+                    sonInstance.onPropsChange.call(x);
                 }
+                // events are registered only the first time...
+                //if (!id) {
+                    this.mapEvents(element, sonInstance);
+                // }
                 this.checkComponentThree(element, sonInstance);
             } else {
                 throw 'Componente non presente';
@@ -134,12 +140,11 @@ export default class Luce {
     }
 
     compiledTemplate(component) {
-        let compiledTemplate = component.template.call(Object.assign({
+        return component.template.call(Object.assign({
             name: component.name,
             id: component.id,
             ...component.model
         }));
-        return compiledTemplate;
     }
 
     rootRender(root, key, urlParams) {
@@ -164,8 +169,24 @@ export default class Luce {
         // 1) Events handlers for USER EVENTS via component methods
 
         // only events of the component but NOT the ones inside data-components
-        // const theOnes = Array.from(root.querySelectorAll('[data-event]')).filter(item => !item.parentNode.closest('[data-component]'));
-        const test = root.querySelectorAll('*>*:not([data-component]) > [data-event]');
+        // const listenersNotInChildComponent = Array.from(root.querySelectorAll('[data-event]')).filter(item => !item.closest('[data-component]'));
+        // const test = root.querySelectorAll('[data-component]>*'); // [data-component] > *
+        // const test1 = test? test.querySelectorAll('[data-event]'):null; // [data-component] > *
+        /*
+            .my-paragraph div:not(.an-other-thing) {
+                display: none;
+            }
+        */
+        // console.log(listenersNotInChildComponent);
+        
+        // const copy = root.cloneNode(true);
+        // const childs = copy.querySelectorAll('[data-component]')
+        // childs.forEach(child=>child.remove());
+        // const triggers = copy.querySelectorAll('[data-event]')
+        // triggers.forEach(element => {
+        //     console.log(`${componentInstance.id}: ${element.dataset.event}`);
+        // });
+
         const theOnes = root.querySelectorAll('[data-event]');
         let that = this;
         theOnes.forEach((theOne, i) => {
@@ -181,7 +202,7 @@ export default class Luce {
             };
             if (that.notAlreadyPresent(componentInstance.id, item)) {
                 that.events[componentInstance.id][i] = item;
-                that.addListners(theOne, componentInstance, i, that);
+                that.addListners(theOne, componentInstance, i);
             } else {
                 // console.log('Already present: ', item);
                 // that.removeListners(theOne, componentInstance, i, that, root);
@@ -197,16 +218,16 @@ export default class Luce {
                 }
             }
         });
-        console.log('Events: ', this.events);
+        // console.log('Events: ', this.events);
     }
 
-    addListners(htmlElement, componentInstance, i, that) {
+    addListners(htmlElement, componentInstance, i) {
         let $e = this;
         htmlElement.addEventListener(this.events[componentInstance.id][i].type, function (e) {
             // passing the model and a reference to events, router and the html element itself
             let scope = Object.assign(componentInstance.model, componentInstance.events, { $router: $e.router, $http: $e.http, $ele: componentInstance.element })
-            let params = that.events[componentInstance.id][i].params ? [e, ...that.events[componentInstance.id][i].params] : [e];
-            componentInstance.events[that.events[componentInstance.id][i].action].apply(scope, params);
+            let params = $e.events[componentInstance.id][i].params ? [e, ...$e.events[componentInstance.id][i].params] : [e];
+            componentInstance.events[$e.events[componentInstance.id][i].action].apply(scope, params);
             console.log('Updated model: ', componentInstance);
         });
     }
