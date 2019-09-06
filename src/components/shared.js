@@ -15,10 +15,10 @@ function template() {
             </tr>
             ${repeat(this.items, i => i.name, (e, index) => html`
             <tr>
-              <td>${e.name}</td>
-              <td>${e.height}</td> 
-              <td>${e.mass}</td>
-              <td><button class="button is-danger" data-event="click:deleteItem(${index})">x</button></td>
+              <td>${e.id}</td>
+              <td>${e.title}</td> 
+              <td>${e.title}</td>
+              <td><button class="button is-danger" data-event="click:deleteItem(${e.id})">x</button></td>
             </tr>`)}
           </table>`}
             
@@ -56,14 +56,14 @@ export function sharedCtrl(id) {
                 this.shared.counter--;
             },
             deleteItem: function ($event, index) {
-                this.items = this.items.filter((e, i) => i != index);
+                this.items = this.items.filter((e, i) => e.id != Number(index));
             },
             async getRandom() {
                 try {
                     this.loading = true;
                     let toAvoidCors = 'https://cors-anywhere.herokuapp.com';
-                    let response = await this.$http.get(toAvoidCors + '/https://swapi.co/api/people');
-                    this.items = response.results;
+                    let response = await this.$http.get(toAvoidCors + '/https://my-json-server.typicode.com/typicode/demo/posts');  // '/https://swapi.co/api/people'
+                    this.items = response;
                     this.loading = false;
                 } catch (error) {
                     console.log('Error: ', error);
