@@ -232,3 +232,53 @@ export default class Luce {
         });
     }
 }
+
+
+
+/*
+
+<div class="prova">
+  <div data-component="uno">
+    <h1>Titolo</h1>
+    <p>paragrafo <span>33</span></p>
+    <button data-events="click:destry"></button>
+  </div>
+
+  <a href="#" title="test">
+      <div id="nested-image">
+            <img src="image.jpg" />
+      </div>
+      <div data-component="due">
+        <button data-events="click:myfunz"></button>
+      </div>
+  </a>
+</div>
+
+		var events =[];
+
+function getTree(node, component) {
+
+    var r = {tag: node.nodeName, element:node, component:component}, a, i;
+    for (i = 0; a = node.attributes[i]; i++) {
+        r[a.nodeName] = a.nodeValue;
+    }
+    if('data-component' in r){
+    	r.component = r['data-component'];
+    }
+    if (node.childElementCount) {
+        r.children = [];
+        for (i = 0; a = node.children[i]; i++ ) {
+            r.children.push(getTree(a, r.component));
+        }
+    }
+    if('data-events' in r){
+    	events.push(r);
+    }
+    return r;        
+}
+
+var root = document.querySelector('.prova');
+console.log(getTree(root,null));
+console.log('Events:',events);
+
+*/
