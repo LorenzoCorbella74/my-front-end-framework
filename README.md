@@ -1,11 +1,11 @@
 # Luce.js
 
- Yet another Front end framework with all the main features of the famous FE framework, developed solely for educational purposes. To have better performance than the solutions adopting Virtual DOM I have used the Templating & Rendering engine of [lit-html](https://github.com/polymer/lit-html) while for data reactivity [on-change](https://github.com/sindresorhus/on-change) has been used.
+ Yet another Front end framework with all the main features of the "famous" FE framework, developed solely for educational purposes. To have better performance than the solutions adopting Virtual DOM I have used the Templating & Rendering engine of [lit-html](https://github.com/polymer/lit-html) while for data reactivity the library [on-change](https://github.com/sindresorhus/on-change) has been used.
 
 ## FEATURES
 - [x] Components, nested components and multiple istances of the same component
 - [x] Components API similar to [Vue.js](https://vuejs.org) with the reactive data model proxied from the```data```property and```Computed properties```
-- [x] Component hooks: onInit, onPropsChange (with check between the change of the data of the parent and the requested property from the child)
+- [x] Component hooks: onInit, onPropsChange (with check between the change of the data of the parent and the requested property from the child), onDestroy
 - [x] Two way data binding and data reactivity on primitives, objects and arrays 
 - [x] wrapper of the [fetch API](https://github.com/github/fetch) for HTTP requests
 - [x] Client side routing system based on [History API](https://developer.mozilla.org/en-US/docs/Web/API/History), routes with parameters, 
@@ -16,13 +16,10 @@
 ### TODO
 - [ ] Event bus: shared state management
 - [ ] queue for multiple data changes triggering only one rerendering of the specific component
-- [ ] onDestroy hook  
-- [ ] Error handler and error messages and debug mode  
+- [ ] Global Error handler and error messages and debug mode  
 
 ## BUGS
 - data reactivity on objects shared among different components
-
-
 
 # Documentation
 
@@ -85,7 +82,7 @@ export function dadCtrl (id) {
         },
         computed:{
             interpolated (params) {
-                return ` Clicked ${this.counter} times`;
+                return `Clicked ${this.counter} times`;
             }
         },
         events: {
@@ -96,12 +93,9 @@ export function dadCtrl (id) {
                 this.counter--;
             }
         }
-        onInit(){
-
-        },
-        onPropsChange(){
-
-        }
+        onInit(){ },
+        onPropsChange(){ },
+        onDestroy(){ }
     }
 };
 ```

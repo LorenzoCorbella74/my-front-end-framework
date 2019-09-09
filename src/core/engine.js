@@ -231,6 +231,24 @@ export default class Luce {
         }
     }
 
+    checkComponentList(){
+        let $e = this;
+        for (let a = 0; a < this.istances.length; a++) {
+            const instance = this.istances[a];
+            if(document.getElementById(instance.id)){
+                // console.log(`Component ${instance.id } is in page.`);
+            } else {
+                if (instance.onDestroy && typeof instance.onDestroy=== 'function') {
+                    // passing the model and a reference to events and router
+                    let scope = Object.assign(instance.model, instance.events, { $router: $e.router, $http: $e.http, $ele: instance.element });
+                    instance.onDestroy.call(scope);
+                }
+                console.log(`Component ${instance.id } removed.`);
+                this.istances.splice(a,1);
+            }
+        }
+    }
+
     mapEvents (root, componentInstance) {
         let $e = this;
         this.tempEvents = {};
@@ -240,7 +258,7 @@ export default class Luce {
         // only events of the component but NOT the ones inside data-components
         let three = this.getTree(root, componentInstance.id);
         // console.log('DOM Three :', three);
-        // console.log('events :', this.tempEvents);
+        // console.log('Three :', this.tempEvents);
         let that = this;
         this.tempEvents[componentInstance.id].forEach((event, i) => {
             if (that.notAlreadyPresent(componentInstance.id, event)) {
@@ -251,6 +269,7 @@ export default class Luce {
             }
         });
         this.checkEventList(componentInstance);
+        this.checkComponentList();
         // 2) handlers for user INPUTS (DATA BINDING)
         const twoWays = root.querySelectorAll('[data-model]'); // solo sul componente
         twoWays.forEach((element, i) => {
@@ -261,6 +280,7 @@ export default class Luce {
                 }
             }
         });
+
         // console.log('Events: ', this.events);
     }
 
