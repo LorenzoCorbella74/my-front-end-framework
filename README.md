@@ -5,7 +5,7 @@
 ## FEATURES
 - [x] Components, nested components and multiple istances of the same component
 - [x] Components API similar to [Vue.js](https://vuejs.org) with the reactive data model proxied from the```data```property and```Computed properties```
-- [x] Component hooks: onInit, onPropsChange
+- [x] Component hooks: onInit, onPropsChange (with check between the change of the data of the parent and the requested property from the child)
 - [x] Two way data binding and data reactivity on primitives, objects and arrays 
 - [x] wrapper of the [fetch API](https://github.com/github/fetch) for HTTP requests
 - [x] Client side routing system based on [History API](https://developer.mozilla.org/en-US/docs/Web/API/History), routes with parameters, 
@@ -17,9 +17,9 @@
 - [ ] Event bus: shared state management
 - [ ] queue for multiple data changes triggering only one rerendering of the specific component
 - [ ] onDestroy hook  
+- [ ] Error handler and error messages and debug mode  
 
 ## BUGS
-- real check on the change of the props to trigger onPropsChange hook
 - data reactivity on objects shared among different components
 
 

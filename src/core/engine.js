@@ -3,6 +3,7 @@ import router from './router';
 import http from './http';
 
 import set from 'lodash.set';
+import get from 'lodash.get';
 import { render } from 'lit-html';
 import onChange from 'on-change';
 
@@ -23,15 +24,18 @@ export default class Luce {
         return this;
     }
 
-    propagateChange (a) {
+    propagateChange (a, path) {
         let sonSInstance = this.istances.filter(e => e.parentId === a.id);
         sonSInstance.forEach(sonIstance => {
-            if (sonIstance.onPropsChange && typeof sonIstance.onPropsChange === 'function') {
-                // passing the model and a reference to events
-                let x = Object.assign(sonIstance.model, sonIstance.events);
-                sonIstance.onPropsChange.call(x);
-            }
-            this.propagateChange(sonIstance);
+            if(path && get(sonIstance.model, path)){
+                console.log("Match between the data sent from parent and the props of the childs");
+                if (sonIstance.onPropsChange && typeof sonIstance.onPropsChange === 'function') {
+                    // passing the model and a reference to events
+                    let x = Object.assign(sonIstance.model, sonIstance.events);
+                    sonIstance.onPropsChange.call(x);
+                }
+            } 
+            this.propagateChange(sonIstance, path);
         });
     }
 
@@ -49,11 +53,22 @@ export default class Luce {
                 // check if there are new child components...
                 $e.checkComponentThree(instance.element, instance);
                 // FIXME: updating sons only if props change 
-                $e.propagateChange(a);
+                $e.propagateChange(a, path);
                 // FIXME: update events  
                 $e.mapEvents(instance.element, instance);
             }
         });
+    }
+
+    isInDadAndChild (obj, arr) {
+        if (obj === null || arr === undefined) return;
+        for (let a = 0; a < arr.length; a++) {
+            const key = arr[a];
+            if (key in obj) {
+                return true;
+            }
+        }
+        return false;
     }
 
     createOrGetCachedIstance (key, id, element, props, parent) {
@@ -64,8 +79,9 @@ export default class Luce {
             a.parentId = parent.id;
             a.element = element;
             a.model = {};
+            let match = this.isInDadAndChild(props, a.props);
             // merging the data of the component with the data received from parent component
-            a.data = props ? Object.assign(a.data, props) : a.data;
+            a.data = props && a.props && match ? Object.assign(a.data, props) : a.data;
 
             this.proxyMe(a.data, a);    // a.model is listening for changes
 
@@ -191,7 +207,7 @@ export default class Luce {
         return result === -1;
     }
 
-    containsObject (id,item) {
+    containsObject (id, item) {
         let result = this.tempEvents[id].findIndex(e => e.element == item.element && e.type == item.type && e.action == item.action);
         return result !== -1;
     }
@@ -203,14 +219,14 @@ export default class Luce {
             const elem = this.events[componentInstance.id][x];
             if (this.containsObject(componentInstance.id, elem)) {
                 continue;
-            }else{
+            } else {
                 index.push(x);
             }
         }
-        if (this.events[componentInstance.id].length > this.tempEvents[componentInstance.id].length && index.length>0) {
+        if (this.events[componentInstance.id].length > this.tempEvents[componentInstance.id].length && index.length > 0) {
             index.forEach(i => {
                 this.removeListners(this.events[componentInstance.id][i], componentInstance);
-                this.events[componentInstance.id].splice(i,1);
+                this.events[componentInstance.id].splice(i, 1);
             });
         }
     }
@@ -269,10 +285,10 @@ export default class Luce {
             // console.log(`Removed event listners for ${htmlElement.type} event, triggering action: ${htmlElement.action}`);
         });
     }
-    removeAllListnersInPage(){
+    removeAllListnersInPage () {
         this.istances.forEach(istance => {
             this.events[istance.id].forEach(event => {
-                this.removeListners(event,istance);
+                this.removeListners(event, istance);
             });
         });
     }
