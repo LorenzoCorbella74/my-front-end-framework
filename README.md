@@ -1,34 +1,38 @@
 # Luce.js
 
-***Luce.js*** è il risultato dei miei sforzi nella creazione di un framework FE avente tutte le principali caratteristiche dei framework attuali, realizzato unicamente per finalità didattiche. Per avere prestazioni in linea o superiori alle soluzioni basate sul Virtual DOM si è utilizzato per il Templating e Rendering engine la libreria [lit-html](https://github.com/polymer/lit-html) mentre per guardare e reagire ai cambiamenti del modello dei dati si è usato [on-change](https://github.com/sindresorhus/on-change).
+ Yet another Front end framework with all the main features of the famous FE framework, developed solely for educational purposes. To have better performance than the solutions adopting Virtual DOM I have used the Templating & Rendering engine of [lit-html](https://github.com/polymer/lit-html) while for data reactivity [on-change](https://github.com/sindresorhus/on-change) has been used.
 
 ## FEATURES
-- [x] Componenti, componenti  innestati e istanze multiple di uno stesso componente
-- [x] API dei componenti simile a quella di [Vue.js](https://vuejs.org) con modello reattivo all'interno della proprietà```data``` e reimplementate le```Computed properties```
-- [x] hook del componente: onInit, onPropsChange
-- [x] Two way data binding  
-- [x] wrapper di [fetch API](https://github.com/github/fetch) per chiamate HTTP
+- [x] Components, nested components and multiple istances of the same component
+- [x] Components API similar to [Vue.js](https://vuejs.org) with the reactive data model proxied from the```data```property and```Computed properties```
+- [x] Component hooks: onInit, onPropsChange
+- [x] Two way data binding and data reactivity on primitives, objects and arrays 
+- [x] wrapper of the [fetch API](https://github.com/github/fetch) for HTTP requests
 - [x] Client side routing system based on [History API](https://developer.mozilla.org/en-US/docs/Web/API/History), routes with parameters, 
 - [x] Filters in template as pure function
-- [x] Props passate da un componente a componente/i figli
-- [x] Gestione automatizzata degli eventi della singola istanza del componente
+- [x] Props from a parent component to child components
+- [x] Automatic management of events on the single component instance
+
+### TODO
+- [ ] Event bus: shared state management
+- [ ] queue for multiple data changes triggering only one rerendering of the specific component
+- [ ] onDestroy hook  
 
 ## BUGS
-- eventi della singola istanza del componente padre doppiati a quelli dei figli e generale rimozione se gli elementi vengono rimossi dal dom
-- verifica effettiva del cambiamento delle props per onPropsChange
-- reattività di un oggetto condiviso tra componenti diversi ( al momento scatena cambiamenti al modello standard in caso di proprietà con nome uguale...)
+- real check on the change of the props to trigger onPropsChange hook
+- data reactivity on an object shared among different component
 
-### TODO:
-- [ ] Event bus: shared state management
-- [ ] "queue dei cambiamenti" per avere un unico re rendering in caso di modifica contemporanea di più proprietà 
-- [ ] hook del componente: onDestroy
+
 
 # Documentation
 
 ## Bootstrap
 
-Per utilizzare il framework è necessario importare la libreria e registrare i componenti:
+Just import the framework and register the component:
 ```javascript
+
+
+import Luce from 'lucejs':
 
 window.onload = function () {
 
@@ -48,23 +52,19 @@ window.onload = function () {
 
 ## Components
 
-I componenti contengono in un unico file```.js``` la funzione responsabile della generazione del template ( in cui è possibile avere componenti tra loro innestati tramite l'attributo ```data-component```) e l'oggetto rappresentativo del componente, contenente il nome, dati del modello, funzioni associate ad aventi e computed properties. Per esigenze didattiche non sono stati utilizzati gli eventi di [lit-html](https://github.com/polymer/lit-html)) ma generati automaticamente gli addEventListeners dal template tramite l'attributo ```data-event="<tipo evento>:<funzione associata>"```. Da notare che è consigliato mettere all'inizio di ciascun template ```class=${uppercase(this.name)}``` per eventualmente distinguere gli stili relativi esclusivamente ad un unico componente (magari anche in un file .sass distinto) mentre è obbligatorio inserire ```id="${this.id}"``` che viene iniettato dall'engine in fase di creazione delle diverse istanze dei componenti e poi utilizzato per gestire le istanze cachate.
+Each component has in one single ```.js```file the function responsible for the compilation of the template and the object representing the component, containing the component name, model data, functions associated with events, computed properties and component hooks. For didactic purpose I haven't used the events of [lit-html](https://github.com/polymer/lit-html))so  events have been automatically added and removed according to the life cycle of the component and its presence in the current route. Events are registered with the attribute  ```data-event="<event type>:<action name>"```. It's higly recommeded to use in the root of the component  a class```class=${uppercase(this.name)}``` to distinguish the style of the component in a .sass distinct file,  while it's mandatory to have an id```id="${this.id}"``` which is injected during the creation of the different istances and then used by the engine to manage the cached istances.
 
-Le proprietà passate da un componente ad un suo figlio sono indicate tramite l'attributo ```data-props="form:name"``` valorizzato con ```<nome proprietà>:<nome proprietà>...```. 
-
-All'interno del componente l'engine inietta ```$ele``` per poter accedere all'elemento html padre del componente.
-
-Per la manipolazione delle interpolazioni del template tramite filtri si utilizzano ```pure functions```.
+To have nested components just place in the component template a div with the attribute ```data-component="<name of the component>"```. Porperties passed from a parent to child components are defined by the attribute ```data-props="<property x name>:<property x name>..."```. Luce.js injects ```$ele``` for accessing the HTML root of the component inside each component. For filter function inside the template just use ```pure functions```.
 
 ```javascript
 
 function template () {
-    return html`<div class=${uppercase(this.name)} id="${this.id}">
+    return html`<div class=${this.name} id="${this.id}">
                 <h3>Dad component</h3>  
                 <p>Counter: ${this.counter}</p>
                 <button data-event="click:add"> + </button>
                 <button data-event="click:remove"> - </button>
-                <p>Esempio di computed properties: ${this.interpolated}</p>
+                <p>Computed properties and filter: ${uppercase(this.interpolated)}</p>
                 <hr> 
                 <div data-component="child-component" data-props="form:name"></div>
             </div>`;
@@ -72,7 +72,7 @@ function template () {
 
 import {html} from 'lit-html';
 
-// FILTRO
+// FILTER
 import uppercase from './../filters/uppercase';
 
 export function dadCtrl (id) {
@@ -96,12 +96,18 @@ export function dadCtrl (id) {
                 this.counter--;
             }
         }
+        onInit(){
+
+        },
+        onPropsChange(){
+
+        }
     }
 };
 ```
 
 ## Router
-Per utilizzare il router si devono mappare i path con il nome del componente da visualizzare, indicare il componente di fallback e fare partire il listner sul cambio di path.
+To use the provided router during the bootstrap of the app just map the URLs with the associated component to be displayed, set the 'fallback' component and start listening for  URL change:
 ```javascript
 window.onload = function () {
 
@@ -127,14 +133,15 @@ window.onload = function () {
 }
 ```
 
-Per usare i link all'interno dei template si deve specificare l'attributo ```data-navigation```:
+To use links for routing inside the template just use the attribute ```data-navigation``` as follows:
 ```html
  <nav>
     <a data-navigation href="/about"> About </a>
     <a data-navigation href="/about/:${this.id}/${this.counter}"> About "with params"</a>
 </nav>
 ```
-All'interno del componente l'engine inietta ```$router``` per poter leggere gli eventuali parametri passati nell'URl o per accedere ai metodi di navigazione.
+
+In order to access the router navigation methods and read the URl params Luce.js injects inside each component the ```$router```object:
 ```javascript
 export function aboutCtrl (id) {
     return {
@@ -157,7 +164,8 @@ export function aboutCtrl (id) {
 ```
 
 ## HTTP
-All'interno del componente l'engine inietta ```$http``` per fare chiamate http (```.get```, ```.post```, ```.put```, ```.patch```, ```.delete```):
+Luce.js injects inside each component the ```$http```object for HTTP ```.get```, ```.post```, ```.put```, ```.patch```, ```.delete``` requests:
+
 ```javascript
 async getRandom () {
                 try {

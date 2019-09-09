@@ -48,9 +48,10 @@ export default (engine, mainTag) => {
 
     const urlParams = extractUrlParams(currentRoute, pathname)
 
-    // mainTag.remove(); --> cos' si rimuovono anche tutti i listners...
+    // removing events, then istances, then tempEvents...
+    engine.removeListnersInPage();
     engine.istances = [];
-    engine.events = {};
+    engine.tempEvents = {};
     engine.rootRender(mainTag, currentRoute.componentName, urlParams)
   }
 
