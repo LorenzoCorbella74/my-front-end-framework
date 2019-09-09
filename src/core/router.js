@@ -49,7 +49,7 @@ export default (engine, mainTag) => {
     const urlParams = extractUrlParams(currentRoute, pathname)
 
     // removing events, then istances, then tempEvents...
-    engine.removeListnersInPage();
+    engine.removeAllListnersInPage();
     engine.istances = [];
     engine.tempEvents = {};
     engine.rootRender(mainTag, currentRoute.componentName, urlParams)

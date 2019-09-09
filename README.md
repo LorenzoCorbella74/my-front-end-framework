@@ -20,7 +20,7 @@
 
 ## BUGS
 - real check on the change of the props to trigger onPropsChange hook
-- data reactivity on an object shared among different component
+- data reactivity on objects shared among different components
 
 
 

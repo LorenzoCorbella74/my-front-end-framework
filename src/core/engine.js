@@ -6,17 +6,6 @@ import set from 'lodash.set';
 import { render } from 'lit-html';
 import onChange from 'on-change';
 
-/* class Logger{
-
-    constructor(){
-
-    }
-
-    log(...p){
-        console.log(...p);
-    }
-} */
-
 export default class Luce {
 
     constructor(main) {
@@ -27,8 +16,6 @@ export default class Luce {
         this.main = main;
         this.router = router(this, main);
         this.http = http;
-/*         this.debug = true;
-        this.logger = new Logger() */
     }
 
     addComponent (key, factoryFn) {
@@ -39,7 +26,6 @@ export default class Luce {
     propagateChange (a) {
         let sonSInstance = this.istances.filter(e => e.parentId === a.id);
         sonSInstance.forEach(sonIstance => {
-            render(this.compiledTemplate(sonIstance), sonIstance.element); // only for the relevant component
             if (sonIstance.onPropsChange && typeof sonIstance.onPropsChange === 'function') {
                 // passing the model and a reference to events
                 let x = Object.assign(sonIstance.model, sonIstance.events);
@@ -138,6 +124,7 @@ export default class Luce {
                 let sonInstance = this.createOrGetCachedIstance(element.dataset.component, id, element, propsToBePassed, componentInstance);
                 render(this.compiledTemplate(sonInstance), element);
                 // events are registered only the first time...
+                // events management is done when data change !!
                 if (!id) {
                     this.mapEvents(element, sonInstance);
                 }
@@ -282,7 +269,7 @@ export default class Luce {
             // console.log(`Removed event listners for ${htmlElement.type} event, triggering action: ${htmlElement.action}`);
         });
     }
-    removeListnersInPage(){
+    removeAllListnersInPage(){
         this.istances.forEach(istance => {
             this.events[istance.id].forEach(event => {
                 this.removeListners(event,istance);
