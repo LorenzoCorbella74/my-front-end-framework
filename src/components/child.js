@@ -21,6 +21,7 @@ export function childCtrl(id) {
         id: id,
         name: "child-component",
         template: templateFactory,
+        props:['form'],
         data: {
             counter: 5,
             visible: false

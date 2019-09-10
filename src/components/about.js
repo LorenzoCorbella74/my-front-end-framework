@@ -24,6 +24,9 @@ export function aboutCtrl (id) {
         },
         onInit () {
             console.log('Route params', this.$router.params);
+        },
+        onDestroy(){
+            console.log('On destroy on component', this);
         }
     }
 }

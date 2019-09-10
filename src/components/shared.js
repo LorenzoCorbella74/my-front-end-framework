@@ -36,6 +36,7 @@ export function sharedCtrl(id) {
         id: id,
         name: 'shared-component',
         template: template,
+        props:['form'],
         data: {
             shared: shared,
             items: [],
