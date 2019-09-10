@@ -10,13 +10,13 @@ import { sharedCtrl } from './components/shared';
 import { aboutCtrl } from './components/about';
 import { notFoundCtrl } from './components/notFound';
 
-import Engine from './core/engine';
+import Luce from 'lucejs';
 
 window.onload = function () {
 
     const mainTag = document.getElementById('output');
 
-    const app = new Engine(mainTag);
+    const app = new Luce(mainTag);
 
     // registering components
     app.addComponent('dad-component', dadCtrl)

@@ -7,8 +7,9 @@
     "framework",
     "front end",
     "lit-html",
-    "component-based",
-    "Vanilla JS"
+    "on-change",
+    "luce.js",
+    "vanilla JS"
   ],
   "author": "Lorenzo Corbella",
   "license": "MIT",
@@ -18,10 +19,7 @@
     "build-prod": "parcel build src/index.html"
   },
   "dependencies": {
-    "lit-html": "^1.1.2",
-    "lodash.get": "^4.4.2",
-    "lodash.set": "^4.3.2",
-    "on-change": "^1.6.2"
+    "lucejs": "0.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
