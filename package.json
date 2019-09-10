@@ -1,7 +1,7 @@
 {
-  "name": "my-front-end-framework",
+  "name": "sample for lucejs",
   "version": "0.1.0",
-  "description": "My own Front End framework",
+  "description": "a sample app to showcase lucejs",
   "main": "app.js",
   "keywords": [
     "framework",

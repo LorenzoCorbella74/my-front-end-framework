@@ -1,9 +1,9 @@
 # Sample app for Luce.js
-This is an example app to showcase the main features of the lucejs framework.
+This is an example app to showcase the main features of the [lucejs](https://github.com/LorenzoCorbella74/luce.js) framework.
 
 ## Bootstrap
 
-Load the dependancies and load the development environment with:
+Load the dependancies and start the development environment with:
 ```bash
 > npm install
 > npm start
@@ -15,7 +15,7 @@ HTML5, CSS, Javascript
 
 ## Versioning
 
-Versione 0.1.0
+Version 0.1.0
 
 ## License
 
