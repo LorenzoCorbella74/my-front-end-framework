@@ -1,5 +1,5 @@
 # Sample app for Luce.js
-This is an example app to showcase the main features of the [lucejs](https://github.com/LorenzoCorbella74/luce.js) framework.
+This is a sample app to showcase the main features of the [lucejs](https://github.com/LorenzoCorbella74/luce.js) framework.
 
 ## Bootstrap
 
@@ -11,7 +11,7 @@ Load the dependancies and start the development environment with:
 
 ## Built With
 
-HTML5, CSS, Javascript
+HTML5, CSS, Javascript,[lucejs](https://github.com/LorenzoCorbella74/luce.js), [parcel](https://github.com/parcel-bundler/parcel)
 
 ## Versioning
 

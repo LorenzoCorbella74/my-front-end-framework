@@ -36,7 +36,7 @@ export function sharedCtrl(id) {
         id: id,
         name: 'shared-component',
         template: template,
-        props:['form'],
+        props: ['form'],
         data: {
             shared: shared,
             items: [],
@@ -44,10 +44,10 @@ export function sharedCtrl(id) {
         },
         onInit() {
             this.getRandom();
-            console.log('The HTML element of this component:', this.$ele);
+            this.$log.log('The HTML element of this component:', this.$ele);
         },
         onPropsChange() {
-            console.log(this);
+            this.$log.log(this);
         },
         events: {
             add: function ($event) {

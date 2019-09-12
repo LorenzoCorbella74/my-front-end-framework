@@ -16,7 +16,7 @@ window.onload = function () {
 
     const mainTag = document.getElementById('output');
 
-    const app = new Luce(mainTag);
+    const app = new Luce(mainTag, { debug: true });
 
     // registering components
     app.addComponent('dad-component', dadCtrl)
