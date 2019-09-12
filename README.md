@@ -11,11 +11,11 @@ Load the dependancies and start the development environment with:
 
 ## Built With
 
-HTML5, CSS, Javascript,[lucejs](https://github.com/LorenzoCorbella74/luce.js), [parcel](https://github.com/parcel-bundler/parcel)
+HTML5, CSS, Javascript,[lucejs](https://github.com/LorenzoCorbella74/luce.js), [parcel](https://github.com/parcel-bundler/parcel), [bulma](https://github.com/jgthms/bulma)
 
 ## Versioning
 
-Version 0.1.5
+Version 0.1.6
 
 ## License
 

@@ -1,3 +1,14 @@
+.root {
+    opacity: 1;
+    transition: 0.7s opacity;
+}
+
+.root.fade {
+    opacity: 0;
+    transition: none;
+}
+
+
 /* ogni componente metterà i suoi stili gerarchizzati sulla classe principale */
 .dad-component {
     padding: 14px;
