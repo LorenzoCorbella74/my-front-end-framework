@@ -1,9 +1,9 @@
-.root {
+#root {
     opacity: 1;
     transition: 0.7s opacity;
 }
 
-.root.fade {
+#root.fade {
     opacity: 0;
     transition: none;
 }

@@ -21,9 +21,7 @@ function template() {
               <td><button class="button is-danger" data-event="click:deleteItem(${e.id})">x</button></td>
             </tr>`)}
           </table>`}
-            
-            <div data-component="child-component" data-props="form"></div>
-        `;
+        <div data-component="child-component" data-props="form"></div>`;
 }
 
 import { html } from 'lit-html';

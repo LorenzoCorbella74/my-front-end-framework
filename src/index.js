@@ -14,9 +14,9 @@ import Luce from 'lucejs';
 
 window.onload = function () {
 
-    const mainTag = document.getElementById('output');  // root of the app
+    const root = document.getElementById('root');  // root of the app
 
-    const app = new Luce(mainTag, { debug: true });     // passing the root and a config obj
+    const app = new Luce(root, { debug: true });   // passing the root and a config obj
 
     // registering components
     app.addComponent('dad-component', dadCtrl)
@@ -26,15 +26,17 @@ window.onload = function () {
         .addComponent('not-found-component', notFoundCtrl)
 
     // rendering the root (no ROUTER)
-    // app.rootRender(mainTag, 'dad-component');
+    // app.rootRender(root, 'dad-component');
 
     // rendering the root with FE ROUTER
-    app.router.beforeChange(($e) => $e.main.classList.add('fade'))
-    app.router.afterChange(($e) => $e.main.classList.remove('fade'))
-    app.router.addRoute('/', 'dad-component')
+    app.router
+        // page fade animation 
+        .beforeChange((luce) => luce.main.classList.add('fade'))
+        .afterChange( (luce) => luce.main.classList.remove('fade'))
+        // mapping path
+        .addRoute('/', 'dad-component')
         .addRoute('/about', 'about-component')
         .addRoute('/about/:id/:counter', 'about-component')
         .ifNotFound('not-found-component')
         .start()
-
 }
