@@ -28,7 +28,8 @@ export function childCtrl(id) {
         },
         events: {
             alertMe: function () {
-                alert('event handler on a child component!')
+                alert('Sending an event to the dad component!');
+                this.$event.emit('from-child',{test:`string from ${this.name}`});
             },
             toggle: function () {
                 this.visible = !this.visible;

@@ -55,6 +55,11 @@ export function dadCtrl (id) {
             remove: function (e) {
                 this.counter--;
             }
+        },
+        onInit() {
+            this.$event.on('from-child', (payload)=>{
+                this.$log.log('Sent with event bus: ' , payload);
+            });
         }
     }
 };

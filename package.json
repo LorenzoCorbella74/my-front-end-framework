@@ -19,7 +19,7 @@
     "build-prod": "parcel build src/index.html"
   },
   "dependencies": {
-    "lucejs": "0.1.9"
+    "lucejs": "0.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
