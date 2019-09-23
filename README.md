@@ -15,7 +15,7 @@ HTML5, CSS, Javascript,[lucejs](https://github.com/LorenzoCorbella74/luce.js), [
 
 ## Versioning
 
-Version 0.2.1
+Version 0.2.98
 
 ## License
 

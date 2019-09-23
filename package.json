@@ -1,6 +1,6 @@
 {
   "name": "sample-for-lucejs",
-  "version": "0.1.9",
+  "version": "0.2.98",
   "description": "a sample app to showcase lucejs",
   "main": "app.js",
   "keywords": [
@@ -19,7 +19,7 @@
     "build-prod": "parcel build src/index.html"
   },
   "dependencies": {
-    "lucejs": "^0.2.2"
+    "lucejs": "^0.2.98"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
